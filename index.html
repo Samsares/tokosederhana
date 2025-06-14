@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toko Sederhana</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero-section">
+    <div class="hero-content">
+      <h1>Selamat Datang di Toko Sederhana</h1>
+      <p>Solusi Kesehatan Alami Tiens untuk Hidup Lebih Baik</p>
+      <div class="hero-buttons">
+        <a href="#about" class="btn btn-primary-outline">Tentang Kami</a>
+        <a href="#tiensProductCatalog" class="btn btn-secondary-outline">Lihat Produk</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container"> <section class="about">
+      <h2>Tentang Kami</h2>
+      <p>Kami menyediakan berbagai produk kesehatan alami berkualitas dari Tiens untuk membantu Anda mencapai hidup yang lebih sehat dan seimbang. Dengan formulasi terbaik, produk kami dirancang untuk mendukung vitalitas dan kesejahteraan Anda.</p>
+    </section>
+
+    <section class="features-grid">
+      <h2>Kenapa Memilih Produk Tiens Kami?</h2>
+      <div class="grid-container">
+        <div class="grid-item">
+          <h3>Kualitas Premium</h3>
+          <p>Produk Tiens diformulasikan dengan bahan alami pilihan dan standar produksi internasional.</p>
+        </div>
+        <div class="grid-item">
+          <h3>Aman & Bersertifikat</h3>
+          <p>Telah mendapatkan sertifikasi BPOM dan Halal, menjamin keamanan dan kehalalan produk.</p>
+        </div>
+        <div class="grid-item">
+          <h3>Solusi Alami</h3>
+          <p>Mendukung kesehatan Anda secara holistik dengan pendekatan alami dan tradisional.</p>
+        </div>
+        <div class="grid-item">
+          <h3>Konsultasi Gratis</h3>
+          <p>Dapatkan rekomendasi produk yang tepat sesuai kebutuhan kesehatan Anda.</p>
+        </div>
+      </div>
+    </section>
+    <section class="age-check">
+      <h2>Usia Anda</h2>
+      <form id="ageForm">
+        <label for="age">Umur Anda:</label>
+        <input type="number" id="age" name="age" min="1" max="120" required />
+      </form>
+      <p id="ageMessage"></p>
+    </section>
+    <section class="symptoms">
+      <h2>Pilih Gejala yang Anda Alami</h2>
+      <form id="symptomForm">
+        <div class="checkbox-columns">
+          <div class="left-column">
+            <label><input type="checkbox" name="gejala" value="Perut kembung" /> Perut kembung</label><br />
+            <label><input type="checkbox" name="gejala" value="Dada terasa panas (heartburn)" /> Dada terasa panas (heartburn)</label><br />
+            <label><input type="checkbox" name="gejala" value="Asam naik ke tenggorokan" /> Asam naik ke tenggorokan</label><br />
+            <label><input type="checkbox" name="gejala" value="Mual/muntah" /> Mual/muntah</label><br />
+            <label><input type="checkbox" name="gejala" value="Sering sendawa" /> Sering sendawa</label><br />
+            <label><input type="checkbox" name="gejala" value="Tenggorokan Gatal atau Batuk Kering" /> Tenggorokan Gatal atau Batuk Kering</label><br />
+          </div>
+          <div class="right-column">
+            <label><input type="checkbox" name="gejala" value="Sesak Nafas Terutama Malam" /> Sesak Nafas Terutama Malam</label><br />
+            <label><input type="checkbox" name="gejala" value="Pusing atau Kepala Ringan" /> Pusing atau Kepala Ringan</label><br />
+            <label><input type="checkbox" name="gejala" value="Merasa ingin Pingsan" /> Merasa ingin Pingsan</label><br />
+            <label><input type="checkbox" name="gejala" value="Dada tertekan seperti Serangan Jantung" /> Dada tertekan seperti Serangan Jantung</label><br />
+            <label><input type="checkbox" name="gejala" value="Nafas Pendek/Berat saat Cemas" /> Nafas Pendek/Berat saat Cemas</label><br />
+          </div>
+        </div>
+      </form>
+      <p id="symptomResult"></p>
+    </section>
+    <section class="mental-checklist">
+      <h2>Gejala psikologi yang Anda Rasakan</h2>
+      <form id="mentalForm">
+        <div class="checkbox-columns">
+          <div class="left-column">
+            <label><input type="checkbox" name="mental" value="Pikiran berlebihan" /> Pikiran berlebihan</label>
+            <label><input type="checkbox" name="mental" value="Sering gelisah tanpa alasan" /> Sering gelisah tanpa alasan</label>
+            <label><input type="checkbox" name="mental" value="Sulit tidur" /> Sulit tidur</label>
+            <label><input type="checkbox" name="mental" value="Sering merasa takut atau panik" /> Sering merasa takut atau panik</label>
+          </div>
+          <div class="right-column">
+            <label><input type="checkbox" name="mental" value="Bangun tidur dengan rasa cemas" /> Bangun tidur dengan rasa cemas</label>
+            <label><input type="checkbox" name="mental" value="Takut makan karena takut kambuh" /> Takut makan karena takut kambuh</label>
+            <label><input type="checkbox" name="mental" value="Ketergantungan pada obat-obatan" /> Ketergantungan pada obat-obatan (antacid/obat lambung)</label>
+          </div>
+        </div>
+      </form>
+    </section>
+    <section class="habit-checklist">
+      <h2>Kebiasaan Sehari-hari</h2>
+      <form id="habitForm">
+        <div class="checkbox-columns">
+          <div class="left-column">
+            <label><input type="checkbox" name="habit" value="Makan tidak teratur" /> Makan tidak teratur</label>
+            <label><input type="checkbox" name="habit" value="Sering makan pedas/berminyak" /> Sering makan pedas/berminyak</label>
+            <label><input type="checkbox" name="habit" value="Sering minum kopi, soda, teh kental" /> Sering minum kopi, soda, teh kental</label>
+            <label><input type="checkbox" name="habit" value="Suka rebahan langsung setelah makan" /> Suka rebahan langsung setelah makan</label>
+          </div>
+          <div class="right-column">
+            <label><input type="checkbox" name="habit" value="Sering begadang" /> Sering begadang</label>
+            <label><input type="checkbox" name="habit" value="Jarang olahraga" /> Jarang olahraga</label>
+            <label><input type="checkbox" name="habit" value="Merokok" /> Merokok</label>
+            <label><input type="checkbox" name="habit" value="Sering konsumsi obat kimia" /> Sering konsumsi obat kimia (NSAID, antibiotik, dll)</label>
+          </div>
+        </div>
+      </form>
+    </section>
+    <section class="impact-checklist">
+      <h2>Dampak yang Anda Alami</h2>
+      <form id="impactForm">
+        <div class="checkbox-columns">
+          <div class="left-column">
+            <label><input type="checkbox" name="impact" value="Tidak nyaman saat ibadah/aktivitas sosial" /> Tidak nyaman saat ibadah/aktivitas sosial</label>
+            <label><input type="checkbox" name="impact" value="Kehilangan nafsu makan" /> Kehilangan nafsu makan</label>
+            <label><input type="checkbox" name="impact" value="Berat badan turun drastis" /> Berat badan turun drastis</label>
+          </div>
+          <div class="right-column">
+            <label><input type="checkbox" name="impact" value="Ketakutan berlebihan untuk kambuh" /> Ketakutan berlebihan untuk kambuh</label>
+            <label><input type="checkbox" name="impact" value="Sudah konsultasi ke dokter tapi tetap kambuh" /> Sudah konsultasi ke dokter tapi tetap kambuh</label>
+            <label><input type="checkbox" name="impact" value="Pernah dirawat karena asam lambung/GERD" /> Pernah dirawat karena asam lambung/GERD</label>
+          </div>
+        </div>
+      </form>
+    </section>
+
+
+    <section class="duration-select">
+      <h2>Berapa Lama Gejala Dialami?</h2>
+      <form id="durationForm">
+        <select id="duration" name="duration" required>
+          <option value="" disabled selected>Pilih Durasi</option>
+          <option value="<<1 minggu"> << 1 minggu</option>
+          <option value="1-3 minggu">1-4 minggu</option>
+          <option value="1-3 bulan">1-3 bulan</option>
+          <option value=">> 3 bulan">>> 3 bulan</option>
+          <option value="1 tahun">1 tahun</option>
+          <option value="2 tahun">2 tahun</option>
+          <option value="3 tahun">3 tahun</option>
+          <option value="Lebih dari 3 tahun">Lebih dari 3 tahun</option>
+        </select>
+      </form>
+      <p id="durationResult"></p>
+    </section>
+    <div class="tombol-container">
+      <button id="cekButton">Cek Keparahan</button>
+    </div>
+
+    <div id="hasilPenilaian" class="hasil-container" style="display: none;"></div>
+
+    <section class="menu">
+      <h2>Katalog Produk Tiens</h2>
+      <div class="carousel-container">
+        <button class="carousel-button left" onclick="scrollCarousel('left')">&#10094;</button>
+        <div id="tiensProductCatalog" class="product-carousel">
+          </div>
+        <button class="carousel-button right" onclick="scrollCarousel('right')">&#10095;</button>
+      </div>
+    </section>
+
+  </div> <footer>
+    <p>📍 Alamat Toko | 📞 0857-2136-8380      | 📧 email@tokomu.com</p>
+    <p>&copy; 2025 Toko Sederhana</p>
+  </footer>
+
+  <script>
+    // Data lengkap produk Tiens
+    const tiensProducts = [
+      {
+        id: "Nutrient Super Calcium Powder",
+        name: "Nutrient Super Calcium Powder",
+        image: "images/calcium.jpg", // PASTIKAN PATH INI BENAR
+        description: "Suplemen kalsium tinggi untuk kesehatan tulang, gigi, dan mendukung fungsi tubuh. Dapat membantu menetralkan asam lambung.",
+        price: "Rp 250.000",
+        whatsappText: "Halo saya mau pesan Nutrient Super Calcium Powder Tiens"
+      },
+      {
+        id: "Zinc Capsules",
+        name: "Zinc Capsules",
+        image: "images/zinc.jpg", // PASTIKAN PATH INI BENAR
+        description: "Meningkatkan daya tahan tubuh, membantu regenerasi sel, dan penting untuk penyembuhan luka termasuk di saluran pencernaan.",
+        price: "Rp 180.000",
+        whatsappText: "Halo saya mau pesan Zinc Capsules Tiens"
+      },
+      {
+        id: "Chitin Chitosan Capsules",
+        name: "Chitin Chitosan Capsules",
+        image: "images/chitosan.jpg", // PASTIKAN PATH INI BENAR
+        description: "Serat alami yang membantu detoksifikasi, mengikat lemak, dan mendukung kesehatan pencernaan secara menyeluruh.",
+        price: "Rp 320.000",
+        whatsappText: "Halo saya mau pesan Chitin Chitosan Capsules Tiens"
+      }
+    ];
+
+    // Fungsi untuk menampilkan katalog produk Tiens dalam carousel
+    function displayTiensProducts(featuredProductId = null) {
+      const catalogContainer = document.getElementById('tiensProductCatalog');
+      catalogContainer.innerHTML = ''; // Bersihkan konten sebelumnya
+
+      // Urutkan produk agar yang unggulan muncul di depan
+      const sortedProducts = [...tiensProducts].sort((a, b) => {
+        if (a.id === featuredProductId) return -1; // A di depan
+        if (b.id === featuredProductId) return 1;  // B di depan
+        return 0; // Tetap pada urutan asli jika tidak ada yang unggulan
+      });
+
+      sortedProducts.forEach(product => {
+        const productDiv = document.createElement('div');
+        productDiv.classList.add('product');
+        if (product.id === featuredProductId) {
+          productDiv.classList.add('featured'); // Tambahkan kelas featured
+        }
+
+        productDiv.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" />
+          <h3>${product.name}</h3>
+          <p>${product.description}</p>
+          <p class="price">${product.price}</p>
+          <a href="https://wa.me/6285721368380?text=${encodeURIComponent(product.whatsappText)}" target="_blank">Pesan via WhatsApp</a>
+        `;
+        catalogContainer.appendChild(productDiv);
+      });
+
+      // Geser ke produk unggulan jika ada dan terlihat
+      if (featuredProductId) {
+        setTimeout(() => { // Memberi waktu DOM untuk render
+          const featuredElement = catalogContainer.querySelector('.product.featured');
+          if (featuredElement) {
+            // Geser agar produk unggulan berada di tengah atau awal tampilan
+            catalogContainer.scrollLeft = featuredElement.offsetLeft - (catalogContainer.offsetWidth / 2) + (featuredElement.offsetWidth / 2);
+          }
+        }, 100); // Penundaan kecil untuk memastikan elemen sudah dirender
+      }
+    }
+
+    // Fungsi untuk scroll carousel
+    function scrollCarousel(direction) {
+      const carousel = document.getElementById('tiensProductCatalog');
+      const scrollAmount = 300; // Sesuaikan jumlah scroll per klik (misal, lebar satu produk + margin)
+
+      if (direction === 'left') {
+        carousel.scrollBy({
+          left: -scrollAmount,
+          behavior: 'smooth'
+        });
+      } else {
+        carousel.scrollBy({
+          left: scrollAmount,
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    // Panggil fungsi displayTiensProducts saat halaman pertama kali dimuat
+    displayTiensProducts();
+
+    // JavaScript logika Analisa Keparahan dan Rekomendasi (Tidak berubah dari sebelumnya)
+    const symptomForm = document.getElementById('symptomForm');
+    const result = document.getElementById('symptomResult');
+
+    function calculateSeverity() {
+      const fisikCheckboxes = Array.from(document.querySelectorAll('input[name="gejala"]:checked'));
+      const mentalCheckboxes = Array.from(document.querySelectorAll('input[name="mental"]:checked'));
+      const habitCheckboxes = Array.from(document.querySelectorAll('input[name="habit"]:checked'));
+      const impactCheckboxes = Array.from(document.querySelectorAll('input[name="impact"]:checked'));
+
+      const fisik = fisikCheckboxes.length;
+      const mental = mentalCheckboxes.length;
+      const habit = habitCheckboxes.length;
+      const impact = impactCheckboxes.length;
+
+      const durasiEl = document.getElementById("duration");
+      const umurEl = document.getElementById("age");
+
+      const durasi = durasiEl && durasiEl.value ? durasiEl.value : null;
+      const umur = umurEl && umurEl.value ? umurEl.value : null;
+
+      let durasiSkor = 0;
+      if (durasi === "<<1 minggu") durasiSkor = 1;
+      else if (durasi === "1-3 minggu" || durasi === "1-3 bulan") durasiSkor = 2;
+      else if (
+        durasi === ">> 3 bulan" ||
+        durasi === "1 tahun" ||
+        durasi === "2 tahun" ||
+        durasi === "3 tahun" ||
+        durasi === "Lebih dari 3 tahun"
+      ) {
+        durasiSkor = 3;
+      }
+
+      const totalSkor = fisik + mental + habit + impact + durasiSkor;
+
+      let diagnosis = "", deskripsi = "", tingkat = "", rekomendasiProductId = null;
+
+      if (totalSkor <= 7) {
+        tingkat = "Ringan";
+        diagnosis = "Dispepsia Fungsional";
+        deskripsi = `
+          Dispepsia Fungsional adalah gangguan pada sistem pencernaan bagian atas tanpa adanya luka atau kerusakan secara fisik pada lambung.
+          Kondisi ini biasanya dipicu oleh stres, kelelahan, dan kebiasaan makan yang tidak teratur.
+          Gejalanya meliputi perut terasa penuh, cepat kenyang, mual ringan, atau rasa tidak nyaman di ulu hati.
+          Penanganan disarankan berupa perbaikan pola makan (makan teratur dalam porsi kecil), menghindari makanan pedas atau berlemak, serta manajemen stres seperti relaksasi dan olahraga ringan.
+        `;
+        rekomendasiProductId = "Nutrient Super Calcium Powder";
+
+      } else if (totalSkor <= 15) {
+        tingkat = "Sedang";
+        diagnosis = "GERD (Gastroesophageal Reflux Disease)";
+        deskripsi = `
+          GERD adalah kondisi kronis di mana asam lambung naik ke kerongkongan (esofagus), menyebabkan iritasi dan rasa panas di dada (heartburn).
+          Gejala umum meliputi mual, asam di tenggorokan, sulit tidur, dan gangguan makan.
+          Kondisi ini dapat diperparah oleh makanan pedas, kebiasaan rebahan setelah makan, kopi, soda, serta stres emosional.
+          Penanganan awal meliputi pengaturan pola makan, posisi tidur (kepala lebih tinggi), serta konsumsi suplemen netralisir asam lambung seperti kalsium dan zinc.
+        `;
+        const hasImpactSymptoms = impactCheckboxes.some(cb => cb.value === "Kehilangan nafsu makan" || cb.value === "Berat badan turun drastis");
+        const hasBurningSymptoms = fisikCheckboxes.some(cb => cb.value === "Dada terasa panas (heartburn)" || fisikCheckboxes.some(cb => cb.value === "Asam naik ke tenggorokan"));
+
+        if (hasImpactSymptoms || durasiSkor >= 2) {
+            rekomendasiProductId = "Zinc Capsules";
+        } else if (hasBurningSymptoms || fisikCheckboxes.some(cb => cb.value === "Perut kembung")) {
+            rekomendasiProductId = "Nutrient Super Calcium Powder";
+        } else {
+            rekomendasiProductId = "Nutrient Super Calcium Powder";
+        }
+
+      } else { // totalSkor > 15 (Berat)
+        tingkat = "Berat";
+        diagnosis = "GERD Kronis & Psikosomatis";
+        deskripsi = `
+          GERD Kronis & Psikosomatis adalah bentuk lanjut dari gangguan asam lambung yang tidak hanya disebabkan oleh faktor fisik, tapi juga dipengaruhi oleh kondisi psikologis seperti kecemasan berlebihan, serangan panik, dan stres jangka panjang.
+          Penderita biasanya mengalami gejala terus-menerus seperti rasa terbakar di dada, mual hebat, sulit bernapas, dan ketergantungan pada obat-obatan lambung.
+          Kondisi ini sering mengganggu aktivitas harian, ibadah, bahkan menyebabkan penurunan berat badan dan kelelahan kronis.
+          Penanganan membutuhkan pendekatan menyeluruh: perbaikan pola makan, terapi psikologis (relaksasi, CBT), serta suplemen untuk memperbaiki jaringan lambung dan daya tahan tubuh.
+        `;
+        const hasBadHabits = habitCheckboxes.some(cb => cb.value === "Sering makan pedas/berminyak" || cb.value === "Sering konsumsi obat kimia");
+        const hasImpactSymptoms = impactCheckboxes.some(cb => cb.value === "Kehilangan nafsu makan" || cb.value === "Berat badan turun drastis");
+        const hasBurningSymptoms = fisikCheckboxes.some(cb => cb.value === "Dada terasa panas (heartburn)" || fisikCheckboxes.some(cb => cb.value === "Asam naik ke tenggorokan"));
+
+        if (hasBadHabits || durasiSkor === 3) {
+            rekomendasiProductId = "Chitin Chitosan Capsules";
+        } else if (hasImpactSymptoms) {
+            rekomendasiProductId = "Zinc Capsules";
+        } else if (hasBurningSymptoms || fisikCheckboxes.some(cb => cb.value === "Perut kembung")) {
+            rekomendasiProductId = "Nutrient Super Calcium Powder";
+        } else {
+            rekomendasiProductId = "Zinc Capsules";
+        }
+      }
+
+      return {
+        umur,
+        durasi,
+        fisik,
+        mental,
+        habit,
+        impact,
+        tingkat,
+        diagnosis,
+        deskripsi,
+        rekomendasiProductId
+      };
+    }
+
+    document.getElementById("cekButton").addEventListener("click", function () {
+      const hasil = calculateSeverity();
+
+      let output = `<h2>📋 Hasil Analisa Keparahan</h2>`;
+
+      if (hasil.umur) {
+        output += `<p><strong>Usia:</strong> ${hasil.umur} tahun</p>`;
+      }
+
+      if (hasil.durasi) {
+        output += `<p><strong>Durasi Gejala:</strong> ${hasil.durasi}</p>`;
+      }
+
+      if (hasil.fisik > 0) {
+        output += `<p><strong>Gejala Fisik:</strong> ${hasil.fisik} gejala dipilih</p>`;
+      }
+
+      if (hasil.mental > 0) {
+        output += `<p><strong>Psikologis:</strong> ${hasil.mental} gejala dipilih</p>`;
+      }
+
+      if (hasil.habit > 0) {
+        output += `<p><strong>Kebiasaan Buruk:</strong> ${hasil.habit} dipilih</p>`;
+      }
+
+      if (hasil.impact > 0) {
+        output += `<p><strong>Dampak Kehidupan:</strong> ${hasil.impact} dipilih</p>`;
+      }
+
+      output += `
+        <hr>
+        <p><strong>Tingkat Keparahan:</strong> ${hasil.tingkat}</p>
+        <h3>🩺 Diagnosis: ${hasil.diagnosis}</h3>
+        <p>${hasil.deskripsi}</p>
+      `;
+
+      if (hasil.rekomendasiProductId) {
+        const recommendedProduct = tiensProducts.find(p => p.id === hasil.rekomendasiProductId);
+        if (recommendedProduct) {
+          output += `<h3>🌿 Rekomendasi Produk Tiens (Paling Relevan):</h3>`;
+          output += `<p>${recommendedProduct.name}</p>`;
+        }
+      }
+
+      const hasilBox = document.getElementById("hasilPenilaian");
+      hasilBox.innerHTML = output;
+      hasilBox.style.display = "block";
+
+      // Setelah hasil ditampilkan, perbarui katalog dengan menandai produk unggulan
+      displayTiensProducts(hasil.rekomendasiProductId);
+    });
+  </script>
+</body>
+</html>
