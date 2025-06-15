@@ -6,7 +6,7 @@
   <title>Toko Sederhana</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Styling tambahan untuk hasil analisa agar lebih rapi di WhatsApp */
+    /* Styling tambahan untuk hasil analisa agar lebih rapi di WhatsApp (opsional, untuk tampilan di web) */
     .whatsapp-pre {
         white-space: pre-wrap; /* Mempertahankan spasi dan baris baru */
         font-family: monospace; /* Font monospasi agar format lebih konsisten */
@@ -15,14 +15,9 @@
 </head>
 <body>
   <header>
-    <h1>Toko Sederhana</h1>
-    <p>Jualan praktis, langsung pesan lewat WhatsApp!</p>
+    <h1>PENGECEKAN KESEHATAN LAMBUNGMU</h1>
+    <p>GERD, ASLAM, DISPEPSIA.</p>
   </header>
-
-  <section class="about">
-    <h2>Tentang Kami</h2>
-    <p>Kami menjual berbagai produk berkualitas dengan harga terjangkau. Silakan pilih produk dan hubungi kami langsung.</p>
-  </section>
 
   <section class="age-check">
     <h2>Usia Anda</h2>
@@ -43,7 +38,7 @@
           <label><input type="checkbox" name="gejala" value="Asam naik ke tenggorokan" /> Asam naik ke tenggorongan</label><br />
           <label><input type="checkbox" name="gejala" value="Mual/muntah" /> Mual/muntah</label><br />
           <label><input type="checkbox" name="gejala" value="Sering sendawa" /> Sering sendawa</label><br />
-          <label><input type="checkbox" name="gejala" value="Tenggorokan Gatal atau Batuk Kering" /> Tenggorokan Gatal atau Batuk Kopi</label><br />
+          <label><input type="checkbox" name="gejala" value="Tenggorokan Gatal atau Batuk Kering" /> Tenggorokan Gatal atau Batuk Kering</label><br />
         </div>
         <div class="right-column">
           <label><input type="checkbox" name="gejala" value="Sesak Nafas Terutama Malam" /> Sesak Nafas Terutama Malam</label><br />
@@ -100,7 +95,7 @@
   </section>
 
   <div class="tombol-container">
-    <button id="cekButton">Cek Keparahan</button>
+    <button id="cekButton">Cek Hasil</button>
   </div>
 
   <div id="hasilPenilaian" class="hasil-container" style="display: none;"></div>
@@ -116,7 +111,7 @@
   </section>
 
   <footer>
-    <p>📍 Alamat Toko | 📞 0812-3456-7890 | 📧 email@tokomu.com</p>
+    <p>📍 Alamat Toko | 📞 0857-2136-8380 | 📧 email@tokomu.com</p>
     <p>&copy; 2025 Toko Sederhana</p>
   </footer>
 
@@ -179,6 +174,14 @@
 
     // Variabel global untuk menyimpan teks hasil analisa
     let currentAnalysisResultText = "";
+
+    // Variabel global untuk menyimpan daftar gejala yang dipilih dalam format teks
+    let selectedSymptomsDetails = {
+        fisik: "",
+        mental: "",
+        habit: "",
+        impact: ""
+    };
 
     // Fungsi untuk menampilkan katalog produk Tiens dalam carousel
     function displayTiensProducts(featuredProductId = null) {
@@ -266,6 +269,9 @@
       const rightColumn = document.createElement('div');
       rightColumn.classList.add('right-column');
 
+      // Hitung jumlah item per kolom agar distribusi seimbang
+      const itemsPerColumn = Math.ceil(checkboxesData.length / 2);
+
       checkboxesData.forEach((item, index) => {
         const label = document.createElement('label');
         const input = document.createElement('input');
@@ -278,10 +284,18 @@
         label.appendChild(input);
         label.appendChild(document.createTextNode(` ${item.label}`));
 
-        if (index % 2 === 0) {
+        // Distribusi item ke kolom kiri atau kanan
+        if (index < itemsPerColumn) {
           leftColumn.appendChild(label);
         } else {
           rightColumn.appendChild(label);
+        }
+        // Tambahkan <br> untuk setiap label kecuali yang terakhir di kolomnya
+        if (index < checkboxesData.length -1 && (index + 1) % itemsPerColumn !== 0) {
+            leftColumn.appendChild(document.createElement('br'));
+        }
+        if (index >= itemsPerColumn && (index + 1) % itemsPerColumn !== 0 && index !== checkboxesData.length - 1) {
+             rightColumn.appendChild(document.createElement('br'));
         }
       });
 
@@ -339,7 +353,10 @@
           ["Perut kembung", "Dada terasa panas (heartburn)", "Asam naik ke tenggorokan", "Mual/muntah", "Sering sendawa", "Tenggorokan Gatal atau Batuk Kering"].includes(symptom)
         );
 
-        if (isAnxietyRelated) {
+        // Aturan untuk menampilkan gejala mental yang relevan
+        if (isAnxietyRelated && isGastricRelated) {
+             relevantMentalSymptoms = allMentalSymptoms; // Tampilkan semua jika ada fisik ansietas dan lambung
+        } else if (isAnxietyRelated) {
           relevantMentalSymptoms = allMentalSymptoms.filter(symptom =>
             ["Pikiran berlebihan", "Sering gelisah tanpa alasan", "Sulit tidur", "Sering merasa takut atau panik", "Bangun tidur dengan rasa cemas", "Takut makan karena takut kambuh"].includes(symptom.value)
           );
@@ -348,7 +365,7 @@
             ["Pikiran berlebihan", "Sering gelisah tanpa alasan", "Sulit tidur", "Takut makan karena takut kambuh"].includes(symptom.value)
           );
         } else {
-          relevantMentalSymptoms = allMentalSymptoms;
+          relevantMentalSymptoms = allMentalSymptoms; // Default: tampilkan semua
         }
         renderCheckboxes('mentalCheckboxesContainer', relevantMentalSymptoms, 'mental', selectedMentalValues);
 
@@ -426,6 +443,7 @@
       const isImpactSectionVisible = !impactSection.classList.contains('hidden-section');
       const isDurationSectionVisible = !durationSection.classList.contains('hidden-section');
 
+      // Validasi agar semua bagian terisi sebelum analisa
       if (!umur || umur === "" ||
         fisikCheckboxes.length === 0 ||
         (isMentalSectionVisible && selectedMentalValues.length === 0) ||
@@ -435,10 +453,16 @@
         return { error: "Harap isi semua data dan keluhan Anda terlebih dahulu." };
       }
 
-      const fisik = fisikCheckboxes.length;
-      const mental = mentalCheckboxes.length;
-      const habit = habitCheckboxes.length;
-      const impact = impactCheckboxes.length;
+      // Kumpulkan detail gejala yang dipilih untuk ditampilkan dan dikirim
+      selectedSymptomsDetails.fisik = fisikCheckboxes.map(cb => cb.value).join(", ");
+      selectedSymptomsDetails.mental = mentalCheckboxes.map(cb => cb.value).join(", ");
+      selectedSymptomsDetails.habit = habitCheckboxes.map(cb => cb.value).join(", ");
+      selectedSymptomsDetails.impact = impactCheckboxes.map(cb => cb.value).join(", ");
+
+      const fisikSkor = fisikCheckboxes.length;
+      const mentalSkor = mentalCheckboxes.length;
+      const habitSkor = habitCheckboxes.length;
+      const impactSkor = impactCheckboxes.length;
 
       let durasiSkor = 0;
       if (durasi === "<<1 minggu") durasiSkor = 1;
@@ -453,7 +477,7 @@
         durasiSkor = 3;
       }
 
-      const totalSkor = fisik + mental + habit + impact + durasiSkor;
+      const totalSkor = fisikSkor + mentalSkor + habitSkor + impactSkor + durasiSkor;
 
       let diagnosis = "", deskripsi = "", tingkat = "", rekomendasiProductId = null;
 
@@ -462,7 +486,7 @@
         diagnosis = "Dispepsia Fungsional";
         deskripsi = `
           Anda mungkin mengalami <strong>Dispepsia Fungsional</strong>, yaitu gangguan pencernaan bagian atas tanpa kerusakan fisik, fokus pada <strong>fungsi kerja lambung</strong> yang terganggu. Gejala umum: <strong>perut penuh/kembung, nyeri ulu hati</strong>. Sering dipicu <strong>stres</strong>. Dengan penanganan tepat, kualitas hidup Anda bisa kembali optimal!
-        `; // 249 karakter
+        `;
         rekomendasiProductId = "Nutrient Super Calcium Powder";
 
       } else if (totalSkor <= 15) {
@@ -470,7 +494,7 @@
         diagnosis = "GERD (Gastroesophageal Reflux Disease)";
         deskripsi = `
           Kemungkinan Anda mengalami <strong>GERD (Gastroesophageal Reflux Disease)</strong>, di mana <strong>asam lambung sering naik ke kerongkongan</strong> karena <strong>katup LES melemah</strong>. Gejala khas: <strong>panas di dada (heartburn), asam di tenggorokan, batuk/serak</strong>. Kondisi ini bisa diatasi agar Anda bebas beraktivitas tanpa khawatir!
-        `; // 249 karakter
+        `;
         const hasImpactSymptoms = impactCheckboxes.some(cb => cb.value === "Kehilangan nafsu makan" || cb.value === "Berat badan turun drastis");
         const hasBurningSymptoms = fisikCheckboxes.some(cb => cb.value === "Dada terasa panas (heartburn)" || fisikCheckboxes.some(cb => cb.value === "Asam naik ke tenggorokan"));
 
@@ -487,7 +511,7 @@
         diagnosis = "GERD Kronis & Psikosomatis";
         deskripsi = `
           Anda berpotensi mengalami <strong>GERD Kronis & Psikosomatis</strong>, GERD yang sudah <strong>berlangsung lama</strong> dan sangat dipengaruhi oleh <strong>stres, cemas, atau serangan panik</strong>. Pikiran dan fisik saling memengaruhi. Gejala bisa sangat intens. Pahami kondisi ini untuk meraih kembali ketenangan dan kesehatan optimal!
-        `; // 250 karakter
+        `;
         const hasBadHabits = habitCheckboxes.some(cb => cb.value === "Sering makan pedas/berminyak" || cb.value === "Sering konsumsi obat kimia");
         const hasImpactSymptoms = impactCheckboxes.some(cb => cb.value === "Kehilangan nafsu makan" || cb.value === "Berat badan turun drastis");
         const hasBurningSymptoms = fisikCheckboxes.some(cb => cb.value === "Dada terasa panas (heartburn)" || fisikCheckboxes.some(cb => cb.value === "Asam naik ke tenggorokan"));
@@ -506,10 +530,10 @@
       return {
         umur,
         durasi,
-        fisik,
-        mental,
-        habit,
-        impact,
+        fisik: fisikSkor, // tetap simpan skornya juga
+        mental: mentalSkor,
+        habit: habitSkor,
+        impact: impactSkor,
         tingkat,
         diagnosis,
         deskripsi,
@@ -524,11 +548,11 @@
       if (hasil.error) {
         hasilBox.innerHTML = `<h2 style="color: red;">${hasil.error}</h2>`;
         hasilBox.style.display = "block";
-        displayTiensProducts();
+        displayTiensProducts(); // Pastikan produk tetap tampil meski ada error
         return;
       }
 
-      let output = `<h2>📋 Hasil Analisa Keparahan</h2>`;
+      let output = `<h2>📋 Hasil Analisa </h2>`;
 
       if (hasil.umur) {
         output += `<p><strong>Usia:</strong> ${hasil.umur} tahun</p>`;
@@ -538,20 +562,29 @@
         output += `<p><strong>Durasi Gejala:</strong> ${hasil.durasi}</p>`;
       }
 
-      if (hasil.fisik > 0) {
-        output += `<p><strong>Gejala Fisik:</strong> ${hasil.fisik} gejala dipilih</p>`;
+      // Tampilkan detail gejala
+      if (selectedSymptomsDetails.fisik) {
+        output += `<p><strong>Gejala Fisik:</strong> ${selectedSymptomsDetails.fisik}</p>`;
+      } else {
+        output += `<p><strong>Gejala Fisik:</strong> Tidak ada yang dipilih</p>`;
       }
 
-      if (hasil.mental > 0) {
-        output += `<p><strong>Psikologis:</strong> ${hasil.mental} gejala dipilih</p>`;
+      if (selectedSymptomsDetails.mental) {
+        output += `<p><strong>Psikologis:</strong> ${selectedSymptomsDetails.mental}</p>`;
+      } else {
+        output += `<p><strong>Psikologis:</strong> Tidak ada yang dipilih</p>`;
       }
 
-      if (hasil.habit > 0) {
-        output += `<p><strong>Kebiasaan Buruk:</strong> ${hasil.habit} dipilih</p>`;
+      if (selectedSymptomsDetails.habit) {
+        output += `<p><strong>Kebiasaan Buruk:</strong> ${selectedSymptomsDetails.habit}</p>`;
+      } else {
+        output += `<p><strong>Kebiasaan Buruk:</strong> Tidak ada yang dipilih</p>`;
       }
 
-      if (hasil.impact > 0) {
-        output += `<p><strong>Dampak Kehidupan:</strong> ${hasil.impact} dipilih</p>`;
+      if (selectedSymptomsDetails.impact) {
+        output += `<p><strong>Dampak Kehidupan:</strong> ${selectedSymptomsDetails.impact}</p>`;
+      } else {
+        output += `<p><strong>Dampak Kehidupan:</strong> Tidak ada yang dipilih</p>`;
       }
 
       output += `
@@ -572,22 +605,29 @@
       hasilBox.innerHTML = output;
       hasilBox.style.display = "block";
 
-      // --- Ambil teks hasil analisa setelah ditampilkan ---
+      // --- Ambil teks hasil analisa setelah ditampilkan dan format untuk WhatsApp ---
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = output; // Masukkan HTML ke div sementara
-      currentAnalysisResultText = tempDiv.innerText.replace(/[\u200B-\u200D\uFEFF]/g, '').trim(); // Ambil teks murni, hapus zero-width space, dan trim
-      // Tambahkan sedikit formatting agar lebih rapi di WhatsApp
-      currentAnalysisResultText = currentAnalysisResultText.replace(/📋 Hasil Analisa Keparahan/g, "Hasil Analisa Keparahan");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/Usia:/g, "\nUsia:");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/Durasi Gejala:/g, "\nDurasi Gejala:");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/Gejala Fisik:/g, "\nGejala Fisik:");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/Psikologis:/g, "\nPsikologis:");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/Kebiasaan Buruk:/g, "\nKebiasaan Buruk:");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/Dampak Kehidupan:/g, "\nDampak Kehidupan:");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/Tingkat Keparahan:/g, "\nTingkat Keparahan:");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/🩺 Diagnosis:/g, "\nDiagnosis:");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/🌿 Rekomendasi Produk Tiens \(Paling Relevan\):/g, "\n📦 Rekomendasi Produk:");
-      currentAnalysisResultText = currentAnalysisResultText.replace(/\n\n\n/g, "\n\n"); // Mengurangi spasi kosong berlebihan
+
+      // Hapus tag HTML, karakter non-breaking space (&nbsp;), dan trim
+      let rawText = tempDiv.innerText.replace(/[\u00A0\u200B-\u200D\uFEFF]/g, ' ').trim();
+
+      // Format ulang untuk kerapihan di WhatsApp
+      rawText = rawText.replace(/📋 Hasil Analisa Keparahan/g, "Hasil Analisa Kondisi Saya");
+      rawText = rawText.replace(/Usia:/g, "\nUsia:");
+      rawText = rawText.replace(/Durasi Gejala:/g, "\nDurasi Gejala:");
+      rawText = rawText.replace(/Gejala Fisik:/g, "\nGejala Fisik:");
+      rawText = rawText.replace(/Psikologis:/g, "\nPsikologis:");
+      rawText = rawText.replace(/Kebiasaan Buruk:/g, "\nKebiasaan Buruk:");
+      rawText = rawText.replace(/Dampak Kehidupan:/g, "\nDampak Kehidupan:");
+      rawText = rawText.replace(/Tingkat Keparahan:/g, "\nTingkat Keparahan:");
+      rawText = rawText.replace(/🩺 Diagnosis:/g, "\nDiagnosis:");
+      rawText = rawText.replace(/🌿 Rekomendasi Produk Tiens \(Paling Relevan\):/g, "\n📦 Rekomendasi Produk:");
+      rawText = rawText.replace(/\n\s*\n\s*\n/g, "\n\n"); // Mengurangi baris kosong berlebihan
+      rawText = rawText.replace(/Tidak ada yang dipilih/g, "Tidak ada"); // Konsistenkan pesan "Tidak ada yang dipilih"
+      rawText = rawText.replace(/:\s*,/g, ": -"); // Jika ada ": ," ubah jadi ": -" (jika tidak ada pilihan)
+
+      currentAnalysisResultText = rawText;
 
       displayTiensProducts(hasil.rekomendasiProductId);
     });
@@ -602,8 +642,8 @@
       } else {
         console.error("Inisialisasi: Salah satu elemen section form tidak ditemukan.");
       }
-      displayTiensProducts();
-      checkFormProgress();
+      displayTiensProducts(); // Tampilkan produk di awal
+      checkFormProgress(); // Jalankan check progress untuk inisialisasi visibilitas
     });
   </script>
 </body>
