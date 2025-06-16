@@ -589,7 +589,7 @@
 
       output += `
         <hr>
-        <p><strong>Tingkat Keparahan:</strong> ${hasil.tingkat}</p>
+        <p><strong>Tingkat Keparahan:</strong> <span id="tingkatKeparahanText">${hasil.tingkat}</span></p>
         <h3>🩺 Diagnosis: ${hasil.diagnosis}</h3>
         <p>${hasil.deskripsi}</p>
       `;
@@ -604,6 +604,21 @@
 
       hasilBox.innerHTML = output;
       hasilBox.style.display = "block";
+
+      // Setelah hasil ditampilkan, atur warna teks tingkat keparahan
+      const tingkatKeparahanTextElement = document.getElementById("tingkatKeparahanText");
+      if (tingkatKeparahanTextElement) {
+        let warna = "";
+        if (hasil.tingkat === "Berat") {
+          warna = "red";
+        } else if (hasil.tingkat === "Sedang") {
+          warna = "#FFA500"; 
+        } else if (hasil.tingkat === "Ringan") {
+          warna = "green";
+        }
+        tingkatKeparahanTextElement.style.color = warna;
+        tingkatKeparahanTextElement.style.fontWeight = "bold"; // Opsional: agar lebih menonjol
+      }
 
       // --- Ambil teks hasil analisa setelah ditampilkan dan format untuk WhatsApp ---
       const tempDiv = document.createElement('div');
