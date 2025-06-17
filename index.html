@@ -120,12 +120,6 @@
             justify-content: space-between;
         }
 
-        @media (max-width: 768px) {
-            .checkbox-grid {
-                grid-template-columns: 1fr; /* Single column on smaller screens */
-            }
-        }
-
         .checkbox-item {
             background-color: #e6f9ed; /* Lighter green tint */
             border: 1px solid #b7e8c3; /* Soft green border */
@@ -699,6 +693,279 @@
         .footer p {
             margin: 0;
         }
+
+        /* --- Media Queries for Responsiveness --- */
+
+        /* Umum untuk layar kecil (HP) */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px; /* Slightly smaller base font for mobile */
+            }
+
+            .container {
+                margin: 15px; /* Smaller margin on mobile */
+                padding: 20px; /* Smaller padding on mobile */
+                border-radius: 12px; /* Slightly less rounded for mobile */
+            }
+
+            h1 {
+                font-size: 2em; /* Smaller main title on mobile */
+            }
+
+            .subtitle {
+                font-size: 1em; /* Smaller subtitle on mobile */
+                margin-bottom: 25px;
+            }
+
+            h2 {
+                font-size: 1.5em; /* Smaller section titles on mobile */
+                margin-top: 25px;
+                margin-bottom: 18px;
+            }
+
+            h3 {
+                font-size: 1.1em; /* Smaller sub-headings on mobile */
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+
+            .form-section {
+                padding: 20px; /* Smaller padding for form sections */
+                margin-bottom: 20px;
+                border-radius: 10px;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="number"],
+            .form-group select {
+                padding: 10px; /* Smaller padding for form inputs */
+                font-size: 14px;
+            }
+
+            .form-group label {
+                font-size: 0.95em;
+                margin-bottom: 6px;
+            }
+
+            /* Checkbox Grid - Single column on smaller screens */
+            .checkbox-grid {
+                grid-template-columns: 1fr; /* Single column on mobile */
+                gap: 12px; /* Smaller gap */
+            }
+
+            .checkbox-item {
+                padding: 15px; /* Smaller padding for checkbox items */
+                border-radius: 10px;
+                font-size: 0.9em;
+            }
+
+            .checkbox-item input[type="checkbox"] {
+                width: 20px; /* Slightly smaller checkbox */
+                height: 20px;
+                margin-right: 12px;
+            }
+
+            .checkbox-item input[type="checkbox"]:checked::after {
+                font-size: 13px; /* Smaller checkmark */
+            }
+
+            .button-container button,
+            .konsultasi-button-container button {
+                padding: 14px 25px; /* Smaller button padding on mobile */
+                font-size: 16px; /* Smaller button font size */
+                gap: 8px; /* Smaller gap for icon */
+            }
+
+            /* Modal Adjustments for mobile */
+            .modal-content {
+                padding: 25px; /* Smaller padding for modal content */
+                border-radius: 15px; /* Slightly less rounded */
+                width: 95%; /* Wider modal on mobile */
+                max-width: unset; /* Remove max-width constraint for full width on mobile */
+                max-height: 85vh; /* Adjust max height for mobile */
+            }
+
+            .close-button {
+                font-size: 30px; /* Smaller close button */
+                top: 10px;
+                right: 15px;
+            }
+
+            .analysis-results-card {
+                padding: 20px;
+            }
+
+            .user-data-display {
+                flex-direction: column; /* Stack user data on mobile */
+                align-items: flex-start;
+                padding: 15px;
+            }
+
+            .profile-image-container {
+                width: 70px; /* Smaller image on mobile */
+                height: 70px;
+                margin-bottom: 15px;
+                margin-right: 0;
+            }
+
+            .user-data-item {
+                flex-direction: column; /* Stack label and value for user data items */
+                margin-bottom: 5px;
+                align-items: flex-start;
+            }
+
+            .user-data-item .label {
+                width: auto; /* Remove fixed width */
+                margin-bottom: 2px;
+                font-size: 0.95em;
+            }
+            .user-data-item .value {
+                font-size: 0.9em;
+            }
+
+            #tingkatKeparahanContainer h3 {
+                font-size: 22px; /* Smaller severity title */
+                flex-direction: column; /* Stack text and badge */
+                gap: 5px;
+            }
+            #tingkatKeparahanText {
+                font-size: 1.0em; /* Smaller severity text badge */
+                padding: 5px 15px;
+            }
+            #summaryDescriptionText {
+                font-size: 1.0em;
+            }
+
+            .lifestyle-tips-section ul li,
+            .product-benefits ul li {
+                padding: 10px 15px; /* Smaller padding for list items */
+                font-size: 0.95em;
+            }
+
+            .recommended-product-card {
+                padding: 15px; /* Smaller padding for recommendation cards */
+                border-radius: 12px;
+            }
+
+            .recommended-product-card img {
+                height: 120px; /* Smaller images in recommendation cards */
+                margin-bottom: 10px;
+            }
+            .recommended-product-card .product-details h4 {
+                font-size: 1.0em; /* Smaller product name */
+                min-height: 40px;
+            }
+            .recommended-product-card .product-details button {
+                padding: 8px 15px;
+                font-size: 0.85em;
+            }
+
+            .custom-cta-text {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            /* Product Carousel - Mobile adjustments */
+            .product-carousel {
+                gap: 15px; /* Smaller gap on mobile */
+                padding: 10px 0;
+            }
+            .product-card {
+                width: 180px; /* Smaller fixed width for mobile carousel items */
+                padding: 15px;
+            }
+            .product-card img {
+                height: 130px; /* Smaller image in carousel */
+            }
+            .product-card h3 {
+                font-size: 0.95em;
+                min-height: 40px;
+            }
+            .product-card button {
+                padding: 8px 15px;
+                font-size: 0.8em;
+            }
+
+            /* Product Detail Modal specific for mobile */
+            .product-detail-modal-content img {
+                max-width: 180px; /* Smaller image in detail modal */
+                margin-bottom: 20px;
+            }
+            .product-detail-modal-content h3 {
+                font-size: 24px; /* Smaller title in detail modal */
+                margin-bottom: 20px;
+            }
+            .product-detail-modal-content .section-title {
+                font-size: 1.1em;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            .product-detail-modal-content p {
+                font-size: 0.95em;
+            }
+
+            .footer {
+                padding: 20px;
+                border-radius: 12px;
+                font-size: 0.8em;
+            }
+        }
+
+        /* Further small screen adjustments (e.g., iPhone SE, older phones) */
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .subtitle {
+                font-size: 0.95em;
+                margin-bottom: 20px;
+            }
+
+            h2 {
+                font-size: 1.3em;
+                margin-top: 20px;
+                margin-bottom: 15px;
+            }
+
+            .form-section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .button-container button,
+            .konsultasi-button-container button {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .close-button {
+                font-size: 28px;
+                top: 5px;
+                right: 10px;
+            }
+
+            .product-carousel {
+                gap: 10px; /* Even smaller gap on very small screens */
+            }
+
+            .product-card {
+                width: 160px; /* Even smaller fixed width */
+            }
+
+            .product-card img {
+                height: 110px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -772,11 +1039,11 @@
         </div>
 
         <div class="button-container">
-            <button id="cekButton">Cek Diagnosa & Rekomendasi</button>
+            <button id="cekButton">Cek Hasil</button>
         </div>
 
         <div class="form-section">
-            <h2>Produk Tiens Lainnya</h2>
+            <h2>Katalog Produk</h2>
             <div class="product-carousel-wrapper">
                 <div id="productCarousel" class="product-carousel">
                     </div>
@@ -812,7 +1079,7 @@
     </div>
 
     <div class="footer">
-        <p>&copy; TERIMAKASIH TELAH BERKUNJUNG & MEMPERCAYAI KAMI</p>
+        <p>&copy; 2025 Diagnosa Kesehatan Lambung & Anxiety. All rights reserved.</p>
     </div>
 
     <script>
@@ -911,7 +1178,7 @@
             { label: "Sulit melakukan aktivitas sehari-hari", value: "Sulit melakukan aktivitas sehari-hari", weight: 3, type: "anxiety", critical: true, desc: "Kesulitan beraktivitas sehari-hari adalah indikator kuat bahwa anxiety sudah mencapai tingkat yang signifikan dan melumpuhkan, mengganggu fungsi normal hidup, pekerjaan, atau sekolah. Ini membutuhkan intervensi segera." },
             { label: "Menarik diri dari lingkungan sosial", value: "Menarik diri dari lingkungan sosial", weight: 3, type: "anxiety", critical: true, desc: "Isolasi sosial adalah tanda anxiety atau depresi yang memburuk, menghambat dukungan sosial yang krusial untuk pemulihan, dan dapat memperparah kondisi mental secara keseluruhan." },
             { label: "Sering izin tidak masuk kerja/sekolah", value: "Sering izin tidak masuk kerja/sekolah", weight: 2, type: "anxiety", desc: "Absensi yang sering dari pekerjaan atau sekolah menunjukkan bahwa gejala Anda sudah berdampak serius pada kewajiban sosial dan profesional, mengganggu stabilitas hidup Anda." },
-            { label: "Kualitas hidup menurun drastis", value: "Kualitas hidup menurun drastis", weight: 3, type: "gerd_anxiety", critical: true, desc: "Penurunan kualitas hidup secara drastis mencerminkan dampak kumulatif dari gejala fisik dan mental yang tidak tertangani. Ini adalah tanda bahwa intervensi menyeluruh dan segera diperlukan untuk mengembalikan kesejahteraan." },
+            { label: "Kualitas hidup menurun drastis", value: "Kualitas hidup menurun dreraatis", weight: 3, type: "gerd_anxiety", critical: true, desc: "Penurunan kualitas hidup secara drastis mencerminkan dampak kumulatif dari gejala fisik dan mental yang tidak tertangani. Ini adalah tanda bahwa intervensi menyeluruh dan segera diperlukan untuk mengembalikan kesejahteraan." },
             { label: "Performa kerja/belajar menurun", value: "Performa kerja/belajar menurun", weight: 2, type: "gerd_anxiety", desc: "Penurunan performa kerja atau belajar menunjukkan bahwa konsentrasi, energi, dan fokus terganggu oleh gejala yang dialami, menghambat potensi diri dan dapat memengaruhi stabilitas karir/pendidikan." }
         ];
 
