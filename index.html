@@ -4,90 +4,523 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CEK KESEHATAN LAMBUNG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
     <style>
-        /* Styling tambahan untuk hasil analisa agar lebih rapi di WhatsApp (opsional, untuk tampilan di web) */
-        .whatsapp-pre {
-            white-space: pre-wrap; /* Mempertahankan spasi dan baris baru */
-            font-family: monospace; /* Font monospasi agar format lebih konsisten */
+        /* Variabel Warna (Opsional, untuk konsistensi) */
+        :root {
+            --primary-green: #28a745;
+            --dark-green: #218838;
+            --whatsapp-green: #25D366;
+            --whatsapp-hover-green: #1DA851;
+            --light-bg: #f8f9fa;
+            --card-bg: #fff;
+            --text-dark: #343a40;
+            --text-medium: #6c757d;
+            --accent-blue: #007bff;
+            --accent-red: #dc3545;
+            --light-blue-bg: #e6f7ff;
+            --light-green-bg: #e9f7ef;
         }
-        /* Style untuk tingkat keparahan */
-        #tingkatKeparahanText {
-            font-weight: bold;
+
+        /* RESET & BASE STYLES */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        /* Styles untuk elemen yang ditambahkan via JS */
-        .analysis-results-card .final-note {
-            font-size: 1.1em;
-            font-weight: bold;
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--light-bg);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            position: relative; /* Untuk penempatan tombol scroll */
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        h1 {
             text-align: center;
+            font-size: 2.2em;
+            color: var(--dark-green);
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--primary-green);
+            font-size: 1.6em;
+        }
+
+        h3 {
+            font-size: 1.3em;
             margin-top: 25px;
-            color: #28a745; /* Warna hijau untuk pesan positif */
+            margin-bottom: 15px;
+            color: var(--dark-green);
         }
-        .analysis-results-card .whatsapp-call-to-action {
-            font-size: 1.0em; /* Disesuaikan agar tidak terlalu besar */
-            font-weight: bold;
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        .form-section {
+            background-color: var(--light-green-bg);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid #d4edda;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-section.hidden-section {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin-bottom: 0;
+            overflow: hidden;
+            border: none;
+            visibility: hidden;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 10px 20px; /* Row gap, column gap */
+        }
+
+        .checkbox-grid label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95em;
+            color: var(--text-dark);
+            position: relative;
+            padding-left: 25px; /* Space for custom checkbox */
+            min-height: 20px; /* Ensure vertical alignment */
+        }
+
+        .checkbox-grid label input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkbox-grid label span.checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .checkbox-grid label:hover input ~ span.checkmark {
+            background-color: #ccc;
+        }
+
+        .checkbox-grid label input:checked ~ span.checkmark {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-grid label input:checked ~ span.checkmark:after {
+            content: "";
+            position: absolute;
+            display: block;
+            left: 7px;
+            top: 3px;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .input-group input[type="number"],
+        .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1em;
+            color: var(--text-dark);
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input[type="number"]:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+
+        .button-group {
             text-align: center;
-            margin-top: 10px; /* Disesuaikan margin */
+            margin-top: 30px;
         }
-        .analysis-results-card .whatsapp-call-to-action a {
-            color: #25D366; /* Warna hijau WhatsApp untuk link */
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #fff;
+            background-color: var(--primary-green);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             text-decoration: none;
         }
-        .analysis-results-card .whatsapp-call-to-action a:hover {
-            text-decoration: underline;
+
+        .btn:hover {
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
         }
-        .analysis-results-card .whatsapp-call-to-action.warning {
-            color: #dc3545; /* Warna merah untuk peringatan */
+
+        .btn:active {
+            transform: translateY(0);
         }
-        /* Style untuk produk unggulan (featured) */
-        .product.featured {
-            border: 2px solid #25D366; /* Contoh border untuk produk unggulan */
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+
+        .btn-whatsapp {
+            background-color: var(--whatsapp-green);
         }
+
+        .btn-whatsapp:hover {
+            background-color: var(--whatsapp-hover-green);
+        }
+
+        /* Hasil Penilaian */
+        #hasilPenilaian {
+            display: none; /* Hidden by default */
+            margin-top: 40px;
+            padding: 30px;
+            background-color: var(--light-blue-bg);
+            border-radius: 12px;
+            border: 1px solid #b3e0ff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        #hasilPenilaian h2 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        #tingkatKeparahanText {
+            font-weight: 700;
+            padding: 5px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        #tingkatKeparahanText.ringan {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        #tingkatKeparahanText.sedang {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        #tingkatKeparahanText.parah {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .summary-text {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .general-characteristics ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+
+        .general-characteristics ul li {
+            background: #e9f7ef;
+            padding: 10px 15px;
+            border-left: 4px solid var(--primary-green);
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .recommendation-section, .lifestyle-tips-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+        }
+
+        .recommendation-section h3, .lifestyle-tips-section h3 {
+            text-align: center;
+            color: var(--primary-green);
+            margin-bottom: 20px;
+        }
+
+        .product-recommendations-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow cards to wrap */
+            gap: 20px;
+            justify-content: center; /* Center products if not filling full row */
+            margin-bottom: 20px;
+        }
+
+        .recommended-product-card {
+            background-color: #f8fcf8;
+            border: 1px solid #d4edda;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            width: calc(33% - 15px); /* 3 cards per row, accounting for gap */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .recommended-product-card img {
+            max-width: 100px;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .recommended-product-card h4 {
+            font-size: 1.1em;
+            color: var(--dark-green);
+            margin-bottom: 5px;
+        }
+
+        .recommended-product-card p {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            margin-bottom: 0;
+        }
+
+        .lifestyle-tips-section ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .lifestyle-tips-section ul li {
+            background: #f0fff0;
+            padding: 10px 15px;
+            border-left: 3px solid var(--primary-green);
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .final-note {
+            font-size: 1.1em;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #e6f7ff;
+            border: 1px solid #91d5ff;
+            color: #0056b3;
+        }
+
+        .final-note.warning {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .whatsapp-call-to-action {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1em;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .konsultasi-button-container {
+            text-align: center;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+        }
+
+        /* Product Catalog (di luar hasil diagnosa) */
+        .tiens-catalog-section {
+            margin-top: 40px;
+            background-color: #e6f7ff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .tiens-catalog-section h2 {
+            text-align: center;
+            color: #28a745;
+            margin-bottom: 25px;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 0 40px; /* Padding for navigation arrows */
+        }
+
         .product-catalog {
             display: flex;
             overflow-x: auto;
             scroll-behavior: smooth;
-            padding: 10px 0;
-            gap: 20px;
-            -webkit-overflow-scrolling: touch; /* Untuk smooth scrolling di iOS */
+            -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+            gap: 20px; /* Space between products */
+            padding-bottom: 15px; /* Space for scrollbar */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: var(--primary-green) #e9ecef; /* Firefox */
         }
+
+        /* Webkit scrollbar (Chrome, Safari) */
+        .product-catalog::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .product-catalog::-webkit-scrollbar-track {
+            background: #e9ecef;
+            border-radius: 10px;
+        }
+
+        .product-catalog::-webkit-scrollbar-thumb {
+            background: var(--primary-green);
+            border-radius: 10px;
+        }
+
+        .product-catalog::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-green);
+        }
+
         .product {
-            flex: 0 0 auto; /* Penting untuk mencegah item mengecil */
-            width: 250px; /* Lebar setiap produk */
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
+            flex: 0 0 auto; /* Prevent stretching and allow shrinking */
+            width: 280px; /* Fixed width for each product card */
+            background-color: var(--card-bg);
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
             text-align: center;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
+
+        .product.featured {
+            border: 2px solid var(--accent-blue);
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
         .product img {
-            max-width: 100%;
-            height: 150px; /* Atur tinggi gambar agar seragam */
-            object-fit: contain; /* Memastikan gambar pas tanpa terdistorsi */
+            max-width: 150px;
+            height: auto;
+            margin: 0 auto 15px;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .product h3 {
+            font-size: 1.25em;
+            color: var(--dark-green);
             margin-bottom: 10px;
         }
-        .product h3 {
-            font-size: 1.2em;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .product p {
+
+        /* Removed .product .short-description style as it will be removed from HTML */
+        /*
+        .product .short-description {
             font-size: 0.9em;
-            color: #666;
-            min-height: 80px; /* Tinggi minimum untuk deskripsi */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 4; /* Batasi 4 baris */
-            -webkit-box-orient: vertical;
+            color: var(--text-medium);
+            margin-bottom: 15px;
+            flex-grow: 1;
         }
-        /* Carousel Navigation */
-        .carousel-container {
+        */
+
+        .product .benefits-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .product .benefits-list li {
+            font-size: 0.85em;
+            color: var(--text-medium);
+            margin-bottom: 5px;
+            padding-left: 20px;
             position: relative;
-            margin: 20px 0;
         }
+
+        .product .benefits-list li::before {
+            content: "✓";
+            color: var(--primary-green);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
         .carousel-button {
             position: absolute;
             top: 50%;
@@ -97,293 +530,441 @@
             border: none;
             padding: 10px 15px;
             cursor: pointer;
-            z-index: 10;
-            border-radius: 50%;
+            z-index: 20;
             font-size: 1.5em;
-            line-height: 1; /* Agar simbol panah di tengah */
-            height: 40px;
-            width: 40px;
+            border-radius: 5px;
+            user-select: none; /* Prevent text selection */
+        }
+
+        .carousel-button.left {
+            left: 0;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .carousel-button.right {
+            right: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        /* --- NEW STYLES FOR PRODUCT MODAL (POP-UP) --- */
+        .product-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-        .carousel-button.left {
-            left: 5px;
-        }
-        .carousel-button.right {
-            right: 5px;
-        }
-        .carousel-button:hover {
-            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            visibility: hidden; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        /* Menyamakan ukuran tombol Konsultasi dengan Cek Hasil */
-        #konsultasiWaButton {
-            padding: 15px 30px; /* Sesuaikan dengan tombol cek hasil */
-            font-size: 1.2em; /* Sesuaikan dengan tombol cek hasil */
-            background-color: #25D366; /* Warna WhatsApp hijau */
-            color: white;
+        .product-modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .product-modal-content {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh; /* Max height to allow scrolling */
+            overflow-y: auto; /* Enable scrolling for long content */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .product-modal-overlay.active .product-modal-content {
+            transform: scale(1);
+        }
+
+        .product-modal-content .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
             border: none;
-            border-radius: 5px;
+            font-size: 1.8em;
+            color: var(--text-medium);
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%; /* Atau sesuaikan lebar yang diinginkan */
-            max-width: 300px; /* Batasi lebar maksimum agar tidak terlalu besar di desktop */
-            box-sizing: border-box; /* Pastikan padding termasuk dalam lebar */
-            margin-top: 20px; /* Memberi sedikit jarak dari hasil analisa */
+            padding: 5px;
+            line-height: 1;
         }
 
-        #konsultasiWaButton:hover {
-            background-color: #1DA851; /* Warna hover WhatsApp */
+        .product-modal-content .close-button:hover {
+            color: var(--accent-red);
         }
 
-        /* Tombol Cek Hasil tetap berwarna hijau */
-        #cekButton {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            width: 100%;
-            max-width: 300px;
-            box-sizing: border-box;
-            background-color: #28a745; /* Warna hijau untuk tombol cek hasil */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #cekButton:hover {
-            background-color: #218838; /* Warna hijau gelap saat hover */
-        }
-
-        /* Container untuk tombol agar di tengah */
-        .tombol-container {
+        .product-modal-content h3 {
+            color: var(--dark-green);
+            font-size: 1.8em; /* Larger title in modal */
+            margin-bottom: 15px;
             text-align: center;
-            margin-top: 20px;
-            margin-bottom: 20px; /* Tambahkan margin bawah untuk jarak ke elemen selanjutnya */
         }
 
-        /* ----- Penyesuaian Ukuran Font di Beberapa Bagian ----- */
-        body {
-            font-size: 16px; /* Ukuran font dasar untuk body, bisa diubah sesuai keinginan */
+        .product-modal-content img {
+            max-width: 180px; /* Larger image in modal */
+            display: block;
+            margin: 0 auto 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        h1 {
-            font-size: 2.2em; /* Contoh: 2.2 * 16px = 35.2px */
+        .product-modal-content .full-description {
+            font-size: 1.1em; /* Larger description text */
+            line-height: 1.7;
+            margin-bottom: 25px;
+            color: var(--text-dark);
+            text-align: justify;
         }
 
-        h2 {
-            font-size: 1.8em; /* Contoh: 1.8 * 16px = 28.8px */
-            margin-bottom: 15px; /* Tambahkan sedikit jarak bawah */
+        .product-modal-content .modal-benefits-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
         }
 
-        p {
-            font-size: 1.1em; /* Contoh: 1.1 * 16px = 17.6px */
-            line-height: 1.6; /* Tinggikan baris untuk readability */
+        .product-modal-content .modal-benefits-list li {
+            background-color: var(--light-green-bg);
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            font-size: 1em; /* Clear font size */
+            color: var(--text-dark);
+            position: relative;
+            padding-left: 30px; /* Space for icon */
         }
 
-        label {
-            font-size: 1.1em; /* Ukuran font untuk label checkbox dan input */
-            margin-bottom: 5px; /* Sedikit jarak antar label */
-            display: inline-block; /* Agar margin-bottom berfungsi */
+        .product-modal-content .modal-benefits-list li::before {
+            content: "✨"; /* A subtle icon */
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9em;
         }
 
-        /* Perubahan di sini: Hapus max-width untuk input number dan select */
-        input[type="number"],
-        select {
-            padding: 10px;
-            font-size: 1.1em; /* Ukuran font untuk input angka dan select */
+        .product .show-detail-button {
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 8px 15px;
+            border: none;
             border-radius: 5px;
-            border: 1px solid #ccc;
-            width: 100%; /* Tetap 100% */
-            /* max-width: 300px; <--- DIHAPUS */
-            box-sizing: border-box;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 15px;
+            transition: background-color 0.2s ease;
         }
 
-        /* Menyesuaikan ukuran checkbox */
-        input[type="checkbox"] {
-            transform: scale(1.2); /* Memperbesar checkbox */
-            margin-right: 8px; /* Memberi jarak antara checkbox dan teks label */
-            vertical-align: middle; /* Agar sejajar dengan teks */
+        .product .show-detail-button:hover {
+            background-color: #0056b3;
+        }
+        /* --- END NEW STYLES --- */
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr; /* Single column on smaller screens */
+            }
+
+            .recommended-product-card {
+                width: calc(50% - 15px); /* 2 cards per row */
+            }
+
+            .carousel-container {
+                padding: 0 20px;
+            }
+
+            .carousel-button {
+                padding: 8px 12px;
+                font-size: 1.2em;
+            }
+
+            /* Modal Responsive */
+            .product-modal-content {
+                width: 95%; /* Adjust width for smaller screens */
+                padding: 20px;
+            }
+            .product-modal-content h3 {
+                font-size: 1.5em;
+            }
+            .product-modal-content .full-description {
+                font-size: 1em;
+            }
+            .product-modal-content .modal-benefits-list li {
+                font-size: 0.9em;
+            }
         }
 
-        .checkbox-columns label {
-            margin-bottom: 10px; /* Jarak antar item checkbox */
-        }
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
 
-        /* Untuk hasil penilaian */
-        #hasilPenilaian p,
-        #hasilPenilaian ul li {
-            font-size: 1.1em;
-        }
-        #hasilPenilaian h3,
-        #hasilPenilaian h4 {
-            font-size: 1.4em;
+            .container {
+                padding: 15px;
+                margin: 10px auto;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+
+            .recommended-product-card {
+                width: 100%; /* Single card per row */
+            }
+
+            .carousel-container {
+                padding: 0 10px;
+            }
+
+            /* Modal Responsive */
+            .product-modal-content {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
+    <div class="container">
         <h1>CEK KESEHATAN LAMBUNG</h1>
-        <p>Nyeri ulu hati, kembung dan Mual adalah gejala umum dari *Gastritis (Maag)*</p>
-    </header>
+        <p style="text-align: center; margin-bottom: 25px; color: var(--text-medium);">
+            Nyeri Ulu Hati, Kembung dan Mual adalah gejala umum dari *Gratitis (Maag)*
+        </p>
 
-    <section class="age-check">
-        <h2>Usia Anda</h2>
-        <form id="ageForm">
-            <label for="age">Umur Anda:</label>
-            <input type="number" id="age" name="age" min="1" max="120" required />
-        </form>
-        <p id="ageMessage"></p>
-    </section>
-
-    <section class="symptoms">
-        <h2>Pilih Gejala yang Anda Alami</h2>
-        <form id="symptomForm">
-            <div class="checkbox-columns">
-                <div class="left-column">
-                    <label><input type="checkbox" name="gejala" value="Perut kembung" /> Perut kembung</label><br />
-                    <label><input type="checkbox" name="gejala" value="Dada terasa panas (heartburn)" /> Dada terasa panas (heartburn)</label><br />
-                    <label><input type="checkbox" name="gejala" value="Asam naik ke tenggorokan" /> Asam naik ke tenggorongan</label><br />
-                    <label><input type="checkbox" name="gejala" value="Mual/muntah" /> Mual/muntah</label><br />
-                    <label><input type="checkbox" name="gejala" value="Sering sendawa" /> Sering sendawa</label><br />
-                    <label><input type="checkbox" name="gejala" value="Tenggorokan Gatal atau Batuk Kering" /> Tenggorokan Gatal atau Batuk Kering</label><br />
-                </div>
-                <div class="right-column">
-                    <label><input type="checkbox" name="gejala" value="Sesak Nafas Terutama Malam" /> Sesak Nafas Terutama Malam</label><br />
-                    <label><input type="checkbox" name="gejala" value="Pusing atau Kepala Ringan" /> Pusing atau Kepala Ringan</label><br />
-                    <label><input type="checkbox" name="gejala" value="Merasa ingin Pingsan" /> Merasa ingin Pingsan</label><br />
-                    <label><input type="checkbox" name="gejala" value="Dada tertekan seperti Serangan Jantung" /> Dada tertekan seperti Serangan Jantung</label><br />
-                    <label><input type="checkbox" name="gejala" value="Nafas Pendek/Berat saat Cemas" /> Nafas Pendek/Berat saat Cemas</label><br />
+        <form id="healthForm">
+            <div class="form-section" id="ageSection">
+                <h2>Informasi Dasar</h2>
+                <div class="input-group">
+                    <label for="age">Usia Anda:</label>
+                    <input type="number" id="age" name="age" min="1" max="120" placeholder="Contoh: 30" required />
                 </div>
             </div>
-        </form>
-        <p id="symptomResult"></p>
-    </section>
 
-    <section class="mental-checklist hidden-section" id="mentalSection">
-        <h2>Gejala psikologi yang Anda Rasakan</h2>
-        <form id="mentalForm">
-            <div class="checkbox-columns" id="mentalCheckboxesContainer">
+            <div class="form-section hidden-section" id="fisikSection">
+                <h2>Gejala Fisik yang Dialami</h2>
+                <p>Pilih gejala fisik yang sering Anda rasakan:</p>
+                <div class="checkbox-grid" id="fisikCheckboxesContainer">
+                    </div>
+            </div>
+
+            <div class="form-section hidden-section" id="mentalSection">
+                <h2>Gejala Psikologi yang Dirasakan</h2>
+                <p>Pilih gejala psikologi/kecemasan yang Anda alami:</p>
+                <div class="checkbox-grid" id="mentalCheckboxesContainer">
+                    </div>
+            </div>
+
+            <div class="form-section hidden-section" id="habitSection">
+                <h2>Kebiasaan Sehari-hari</h2>
+                <p>Pilih kebiasaan yang mungkin memperparah kondisi Anda:</p>
+                <div class="checkbox-grid" id="habitCheckboxesContainer">
+                    </div>
+            </div>
+
+            <div class="form-section hidden-section" id="impactSection">
+                <h2>Dampak Kondisi Saat Ini</h2>
+                <p>Bagaimana kondisi ini memengaruhi hidup Anda?</p>
+                <div class="checkbox-grid" id="impactCheckboxesContainer">
+                    </div>
+            </div>
+
+            <div class="form-section hidden-section" id="durationSection">
+                <h2>Sudah Berapa Lama Gejala Dirasakan</h2>
+                <div class="input-group">
+                    <label for="duration">Sudah berapa lama gejala ini Anda alami?</label>
+                    <select id="duration" name="duration" required>
+                        <option value="">-- Pilih Durasi --</option>
+                        <option value="<1 minggu">&lt; 1 minggu</option>
+                        <option value="1-3 minggu">1-3 minggu</option>
+                        <option value="1-3 bulan">1-3 bulan</option>
+                        <option value=">3 bulan">> 3 bulan</option>
+                        <option value="1 tahun">1 tahun</option>
+                        <option value="2 tahun">2 tahun</option>
+                        <option value="3 tahun">3 tahun</option>
+                        <option value="Lebih dari 3 tahun">Lebih dari 3 tahun</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" id="cekButton" class="btn">Cek Hasil Diagnosa</button>
             </div>
         </form>
-    </section>
 
-    <section class="habit-checklist hidden-section" id="habitSection">
-        <h2>Kebiasaan Sehari-hari</h2>
-        <form id="habitForm">
-            <div class="checkbox-columns" id="habitCheckboxesContainer">
+        <div id="hasilPenilaian">
             </div>
-        </form>
-    </section>
 
-    <section class="impact-checklist hidden-section" id="impactSection">
-        <h2>Dampak yang Anda Alami</h2>
-        <form id="impactForm">
-            <div class="checkbox-columns" id="impactCheckboxesContainer">
-            </div>
-        </form>
-    </section>
-
-    <section class="duration-select hidden-section" id="durationSection">
-        <h2>Berapa Lama Gejala Dialami?</h2>
-        <form id="durationForm">
-            <select id="duration" name="duration" required>
-                <option value="" disabled selected>Pilih Durasi</option>
-                <option value="<<1 minggu"> << 1 minggu</option>
-                <option value="1-3 minggu">1-4 minggu</option>
-                <option value="1-3 bulan">1-3 bulan</option>
-                <option value=">> 3 bulan">>> 3 bulan</option>
-                <option value="1 tahun">1 tahun</option>
-                <option value="2 tahun">2 tahun</option>
-                <option value="3 tahun">3 tahun</option>
-                <option value="Lebih dari 3 tahun">Lebih dari 3 tahun</option>
-            </select>
-        </form>
-        <p id="durationResult"></p>
-    </section>
-
-    <div class="tombol-container">
-        <button id="cekButton">Cek Hasil</button>
-    </div>
-
-    <div id="hasilPenilaian" class="hasil-container" style="display: none;"></div>
-
-    <div class="tombol-container" id="konsultasiButtonContainer" style="display: none;">
-        <button id="konsultasiWaButton">Konsultasi via WhatsApp</button>
-    </div>
-
-    <section class="menu">
-        <h2>Katalog Produk Tiens</h2>
-        <div class="carousel-container">
-            <button class="carousel-button left" onclick="scrollCarousel('left')">&#10094;</button>
-            <div class="product-catalog" id="tiensProductCatalog">
-            </div>
-            <button class="carousel-button right" onclick="scrollCarousel('right')">&#10095;</button>
+        <div class="konsultasi-button-container" id="konsultasiButtonContainer">
+            <button type="button" id="konsultasiWaButton" class="btn btn-whatsapp">Konsultasi via WhatsApp</button>
         </div>
-    </section>
 
-    <footer>
-        <p>TERIMAKASIH TELAH BERKUNJUNG DAN MEMPERCAI KAMI</p>
-        <p>&copy; SEMOGA LEKAS SEMBUH</p>
-    </footer>
+        <div class="tiens-catalog-section">
+            <h2>Katalog Produk Tiens Lainnya</h2>
+            <div class="carousel-container">
+                <button class="carousel-button left" onclick="scrollCarousel('left')">&#10094;</button>
+                <div class="product-catalog" id="tiensProductCatalog">
+                    </div>
+                <button class="carousel-button right" onclick="scrollCarousel('right')">&#10095;</button>
+            </div>
+        </div>
 
+    </div> <div class="product-modal-overlay" id="productDetailModal">
+        <div class="product-modal-content">
+            <button class="close-button" id="closeModalButton">&times;</button>
+            <h3 id="modalProductName"></h3>
+            <img id="modalProductImage" src="" alt="Product Image">
+            <p class="full-description" id="modalProductDescription"></p>
+            <h4>Manfaat Utama:</h4>
+            <ul class="modal-benefits-list" id="modalProductBenefits">
+                </ul>
+        </div>
+    </div>
     <script>
-        // Data lengkap produk Tiens
+        // Data Produk Tiens
         const tiensProducts = [
             {
                 id: "Nutrient Super Calcium Powder",
                 name: "Nutrient Super Calcium Powder",
                 image: "images/calcium.jpg", // PASTIKAN PATH INI BENAR
-                description: "Suplemen kalsium tinggi untuk kesehatan tulang, gigi, dan mendukung fungsi tubuh. Dapat membantu menetralkan asam lambung."
+                shortDescription: "Suplemen kalsium tinggi untuk kesehatan tulang, gigi, dan mendukung fungsi tubuh secara menyeluruh.",
+                fullDescription: "Nutrient Super Calcium Powder dari Tiens adalah suplemen kalsium premium yang dirancang khusus untuk memenuhi kebutuhan kalsium harian tubuh. Diformulasikan dengan teknologi canggih, kalsium ini memiliki tingkat penyerapan yang tinggi, jauh melampaui produk kalsium biasa. Selain kalsium, produk ini diperkaya dengan berbagai vitamin dan mineral esensial lainnya yang bekerja sinergis untuk memaksimalkan manfaat. Konsumsi rutin dapat membantu memperkuat tulang dan gigi, mencegah osteoporosis, serta mendukung transmisi saraf yang sehat, vital untuk fungsi jantung dan sistem saraf. Keunggulan utama produk ini terletak pada bioavailabilitasnya yang tinggi, memastikan setiap asupan kalsium diserap secara efisien oleh tubuh.",
+                benefits: [
+                    "Menetralkan asam lambung berlebih secara efektif, mengurangi gejala heartburn dan refluks.",
+                    "Menenangkan sistem saraf yang tegang dan overaktif, membantu meredakan kecemasan dan stres.",
+                    "Menjaga keseimbangan pH tubuh, menciptakan lingkungan yang tidak kondusif untuk pertumbuhan bakteri jahat.",
+                    "Mendukung kekuatan tulang dan gigi, serta mencegah pengeroposan tulang (osteoporosis).",
+                    "Membantu meningkatkan kualitas tidur dan mengurangi insomnia yang disebabkan oleh kecemasan.",
+                    "Berperan dalam kontraksi otot dan fungsi jantung yang optimal."
+                ]
             },
             {
                 id: "Zinc Capsules",
                 name: "Zinc Capsules",
                 image: "images/zinc.jpg", // PASTIKAN PATH INI BENAR
-                description: "Meningkatkan daya tahan tubuh, membantu regenerasi sel, dan penting untuk penyembuhan luka termasuk di saluran pencernaan."
+                shortDescription: "Kapsul Zinc berperan penting dalam meningkatkan daya tahan tubuh dan mempercepat perbaikan sel.",
+                fullDescription: "Tiens Zinc Capsules adalah suplemen vital yang menyediakan asupan Zinc yang cukup untuk tubuh. Zinc adalah mineral esensial yang terlibat dalam lebih dari 300 reaksi enzimatik di dalam tubuh, menjadikannya krusial untuk berbagai fungsi biologis. Produk ini mendukung sistem kekebalan tubuh yang kuat, mempercepat penyembuhan luka, dan berperan dalam sintesis protein dan pembelahan sel. Bagi penderita gangguan pencernaan, Zinc sangat penting untuk regenerasi sel-sel mukosa lambung dan usus yang mungkin rusak akibat peradangan atau iritasi. Selain itu, Zinc juga diketahui dapat memengaruhi fungsi saraf dan mood, menjadikannya relevan dalam penanganan aspek kecemasan.",
+                benefits: [
+                    "Mempercepat regenerasi sel lambung yang rusak atau teriritasi akibat asam lambung berlebih.",
+                    "Meningkatkan nafsu makan yang sering menurun pada penderita GERD anxiety.",
+                    "Menjaga dan mendukung fungsi enzim pencernaan, memastikan penyerapan nutrisi optimal.",
+                    "Meningkatkan imunitas tubuh, membuat tubuh lebih tahan terhadap infeksi.",
+                    "Membantu menyeimbangkan hormon dan neurotransmitter yang berhubungan dengan suasana hati dan kecemasan.",
+                    "Berperan dalam pembentukan kolagen untuk integritas jaringan."
+                ]
             },
             {
                 id: "Chitin Chitosan Capsules",
                 name: "Chitin Chitosan Capsules",
                 image: "images/chitosan.jpg", // PASTIKAN PATH INI BENAR
-                description: "Serat alami yang membantu detoksifikasi, mengikat lemak, dan mendukung kesehatan pencernaan secara menyeluruh."
+                shortDescription: "Serat alami dengan kemampuan detoksifikasi kuat, membantu membersihkan saluran pencernaan.",
+                fullDescription: "Chitin Chitosan Capsules dari Tiens adalah suplemen serat alami yang diekstrak dari cangkang udang dan kepiting. Produk ini terkenal dengan kemampuannya untuk mengikat lemak, kolesterol, dan racun dalam saluran pencernaan, lalu mengeluarkannya dari tubuh. Chitosan tidak dicerna oleh tubuh manusia, sehingga berfungsi sebagai serat yang dapat membersihkan usus dan membantu melancarkan pencernaan. Dalam konteks masalah lambung, Chitosan dapat membantu menyerap kelebihan asam lambung dan melapisi dinding lambung, memberikan perlindungan dari iritasi. Efek detoksifikasinya juga berkontribusi pada kesehatan usus yang lebih baik secara keseluruhan.",
+                benefits: [
+                    "Mengikat racun, logam berat, dan kelebihan asam lambung dalam saluran cerna.",
+                    "Membersihkan saluran pencernaan secara menyeluruh, mengurangi penumpukan sisa makanan dan toksin.",
+                    "Mengurangi gejala perut kembung dan begah dengan menyerap gas berlebih.",
+                    "Membantu memperbaiki fungsi usus dan mendukung keseimbangan mikrobioma usus.",
+                    "Membantu mengurangi peradangan pada dinding lambung.",
+                    "Dapat membantu menurunkan kadar kolesterol dan gula darah."
+                ]
             }
         ];
 
-        // Definisikan semua opsi checkbox untuk masing-masing kategori
+        // Definisikan semua opsi checkbox untuk masing-masing kategori dengan BOBOT SKOR
+        const allFisikSymptomsWithWeights = [
+            { value: "Perut begah", label: "Perut begah", weight: 2, relatedTo: ["gastric"] },
+            { value: "Dada terasa panas (heartburn)", label: "Dada terasa panas (heartburn)", weight: 3, relatedTo: ["gastric"] },
+            { value: "Asam naik ke tenggorokan", label: "Asam naik ke tenggorongan", weight: 3, relatedTo: ["gastric"] },
+            { value: "Mual/muntah", label: "Mual/muntah", weight: 3, relatedTo: ["gastric"] },
+            { value: "Sering sendawa", label: "Sering sendawa", weight: 2, relatedTo: ["gastric"] },
+            { value: "Tenggorokan Gatal atau Batuk Kering", label: "Tenggorokan Gatal atau Batuk Kering", weight: 2, relatedTo: ["gastric"] },
+            { value: "Nyeri bagian ulu hati seperti ditekan", label: "Nyeri bagian ulu hati seperti ditekan", weight: 4, relatedTo: ["gastric", "anxiety"] },
+            { value: "Pusing / kleyengan", label: "Pusing / kleyengan", weight: 3, relatedTo: ["anxiety"] },
+            { value: "Badan lemas seperti mau pingsan", label: "Badan lemas seperti mau pingsan", weight: 4, relatedTo: ["anxiety"] },
+            { value: "Dada tertekan seperti Serangan Jantung", label: "Dada tertekan seperti Serangan Jantung", weight: 4, relatedTo: ["anxiety"] },
+            { value: "Nafas Pendek/Berat saat Cemas", label: "Nafas Pendek/Berat saat Cemas", weight: 4, relatedTo: ["anxiety"] },
+            { value: "Sering nyeri bagian perut kiri", label: "Sering nyeri bagian perut kiri", weight: 3, relatedTo: ["gastric", "anxiety"] }
+        ];
+
         const allMentalSymptoms = [
-            { value: "Pikiran berlebihan", label: "Pikiran berlebihan" },
-            { value: "Sering gelisah tanpa alasan", label: "Sering gelisah tanpa alasan" },
-            { value: "Sulit tidur", label: "Sulit tidur" },
-            { value: "Sering merasa takut atau panik", label: "Sering merasa takut atau panik" },
-            { value: "Bangun tidur dengan rasa cemas", label: "Bangun tidur dengan rasa cemas" },
-            { value: "Takut makan karena takut kambuh", label: "Takut makan karena takut kambuh" },
-            { value: "Ketergantungan pada obat-obatan", label: "Ketergantungan pada obat-obatan (antacid/obat lambung)" }
+            { value: "Sering pikiran berlebihan / overthinking dimalam hari", label: "Sering pikiran berlebihan / overthinking dimalam hari", weight: 3 },
+            { value: "Sering gelisah tanpa alasan", label: "Sering gelisah tanpa alasan", weight: 3 },
+            { value: "Sulit tidur", label: "Sulit tidur", weight: 2 },
+            { value: "Sering merasa takut atau panik", label: "Sering merasa takut atau panik", weight: 4 },
+            { value: "Bangun tidur dengan rasa cemas", label: "Bangun tidur dengan rasa cemas", weight: 4 },
+            { value: "Makan sedikit namun cepat kenyang", label: "Makan sedikit namun cepat kenyang", weight: 3 },
+            { value: "Ketergantungan pada obat-obatan", label: "Ketergantungan pada obat-obatan (antacid/obat lambung)", weight: 4 }
         ];
 
         const allHabits = [
-            { value: "Makan tidak teratur", label: "Makan tidak teratur" },
-            { value: "Sering makan pedas/berminyak", label: "Sering makan pedas/berminyak" },
-            { value: "Sering minum kopi, soda, teh kental", label: "Sering minum kopi, soda, teh kental" },
-            { value: "Suka rebahan langsung setelah makan", label: "Suka rebahan langsung setelah makan" },
-            { value: "Sering begadang", label: "Sering begadang" },
-            { value: "Jarang olahraga", label: "Jarang olahraga" },
-            { value: "Merokok", label: "Merokok" },
-            { value: "Sering konsumsi obat kimia", label: "Sering konsumsi obat kimia (NSAID, antibiotik, dll)" }
+            { value: "Makan tidak teratur", label: "Makan tidak teratur", weight: 2 },
+            { value: "Sering makan pedas/berminyak", label: "Sering makan pedas/berminyak", weight: 2 },
+            { value: "Sering minum kopi, soda, teh kental", label: "Sering minum kopi, soda, teh kental", weight: 2 },
+            { value: "Suka rebahan langsung setelah makan", label: "Suka rebahan langsung setelah makan", weight: 2 },
+            { value: "Sering begadang", label: "Sering begadang", weight: 2 },
+            { value: "Jarang olahraga", label: "Jarang olahraga", weight: 1 },
+            { value: "Merokok", label: "Merokok", weight: 3 },
+            { value: "Sering konsumsi obat kimia", label: "Sering konsumsi obat kimia (NSAID, antibiotik, dll)", weight: 3 },
+            { value: "Jarang minum air putih", label: "Jarang minum air putih", weight: 1 },
+            { value: "Tidak pernah makan buah/sayur", label: "Tidak pernah makan buah/sayur", weight: 1 },
+            { value: "Sering makan buah/makanan yang mengandung asam", label: "Sering makan buah/makanan yang mengandung asam", weight: 2 }
         ];
 
         const allImpacts = [
-            { value: "Tidak nyaman saat ibadah/aktivitas sosial", label: "Tidak nyaman saat ibadah/aktivitas sosial" },
-            { value: "Kehilangan nafsu makan", label: "Kehilangan nafsu makan" },
-            { value: "Berat badan turun drastis", label: "Berat badan turun drastis" },
-            { value: "Ketakutan berlebihan untuk kambuh", label: "Ketakutan berlebihan untuk kambuh" },
-            { value: "Sudah konsultasi ke dokter tapi tetap kambuh", label: "Sudah konsultasi ke dokter tapi tetap kambuh" },
-            { value: "Pernah dirawat karena asam lambung/GERD", label: "Pernah dirawat karena asam lambung/GERD" }
+            { value: "Tidak nyaman saat ibadah/aktivitas sosial", label: "Tidak nyaman saat ibadah/aktivitas sosial", weight: 3 },
+            { value: "Kehilangan nafsu makan", label: "Kehilangan nafsu makan", weight: 3 },
+            { value: "Berat badan turun drastis", label: "Berat badan turun drastis", weight: 4 },
+            { value: "Ketakutan berlebihan untuk kambuh", label: "Ketakutan berlebihan untuk kambuh", weight: 4 },
+            { value: "Sudah konsultasi ke dokter tapi tetap kambuh", label: "Sudah konsultasi ke dokter tapi tetap kambuh", weight: 5 },
+            { value: "Pernah dirawat karena asam lambung/GERD", label: "Pernah dirawat karena asam lambung/GERD", weight: 5 }
         ];
 
-        // Variabel global untuk menyimpan teks hasil analisa
-        let currentAnalysisResultText = "";
+        const durationWeights = {
+            "<1 minggu": 1,
+            "1-3 minggu": 2, 
+            "1-3 bulan": 3,
+            ">3 bulan": 4, 
+            "1 tahun": 5,
+            "2 tahun": 6,
+            "3 tahun": 7,
+            "Lebih dari 3 tahun": 8
+        };
+
+
+        // Variabel global untuk menyimpan teks hasil diagnosa
+        let currentDiagnosisResultText = ""; 
+        let currentRecommendationProducts = [];
+        let currentLifestyleTips = [];
+        let currentGeneralCharacteristics = []; 
+        let currentFinalNote = ""; // Untuk menyimpan pesan di bawah rekomendasi
+
 
         // Variabel global untuk menyimpan daftar gejala yang dipilih dalam format teks
         let selectedSymptomsDetails = {
@@ -419,12 +1000,22 @@
                     productDiv.classList.add('featured');
                 }
 
+                // Removed benefits-list here as it will be in modal now.
+                // Product short description remains in the card.
                 productDiv.innerHTML = `
                     <img src="${product.image}" alt="${product.name}" />
                     <h3>${product.name}</h3>
-                    <p>${product.description}</p>
+                    <button class="show-detail-button" data-product-id="${product.id}">Lihat Detail</button>
                 `;
                 catalogContainer.appendChild(productDiv);
+            });
+
+            // Attach event listeners to new "Lihat Detail" buttons
+            document.querySelectorAll('.show-detail-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const productId = event.target.dataset.productId;
+                    showProductModal(productId);
+                });
             });
 
             // Otomatis scroll ke produk unggulan jika ada
@@ -474,10 +1065,11 @@
             }
             container.innerHTML = '';
 
+            // Create two columns for the checkboxes
             const leftColumn = document.createElement('div');
-            leftColumn.classList.add('left-column');
+            leftColumn.classList.add('column'); // Use 'column' class for flex direction
             const rightColumn = document.createElement('div');
-            rightColumn.classList.add('right-column');
+            rightColumn.classList.add('column'); // Use 'column' class for flex direction
 
             const itemsPerColumn = Math.ceil(checkboxesData.length / 2);
 
@@ -490,7 +1082,11 @@
                 if (checkedValues.includes(item.value)) {
                     input.checked = true;
                 }
+                const checkmark = document.createElement('span');
+                checkmark.classList.add('checkmark');
+
                 label.appendChild(input);
+                label.appendChild(checkmark);
                 label.appendChild(document.createTextNode(` ${item.label}`));
 
                 if (index < itemsPerColumn) {
@@ -498,14 +1094,7 @@
                 } else {
                     rightColumn.appendChild(label);
                 }
-                if ((index < itemsPerColumn && index < itemsPerColumn - 1) || (index >= itemsPerColumn && index < checkboxesData.length - 1)) {
-                     const column = (index < itemsPerColumn) ? leftColumn : rightColumn;
-                     if (index !== (itemsPerColumn -1) && index !== (checkboxesData.length -1) && (index + 1) % itemsPerColumn !== 0) {
-                         column.appendChild(document.createElement('br'));
-                     }
-                 }
             });
-
 
             container.appendChild(leftColumn);
             container.appendChild(rightColumn);
@@ -513,18 +1102,16 @@
 
         // --- Logika Progresif untuk Menampilkan Bagian Form ---
 
-        const fisikCheckboxes = document.querySelectorAll('input[name="gejala"]');
+        const ageSection = document.getElementById('ageSection');
+        const fisikSection = document.getElementById('fisikSection');
         const mentalSection = document.getElementById('mentalSection');
         const habitSection = document.getElementById('habitSection');
         const impactSection = document.getElementById('impactSection');
         const durationSection = document.getElementById('durationSection');
         const ageInput = document.getElementById('age');
         const durationSelect = document.getElementById('duration');
-
-        const symptomForm = document.getElementById('symptomForm');
-        const mentalForm = document.getElementById('mentalForm');
-        const habitForm = document.getElementById('habitForm');
-        const impactForm = document.getElementById('impactForm');
+        const hasilPenilaianDiv = document.getElementById('hasilPenilaian');
+        const konsultasiButtonContainer = document.getElementById('konsultasiButtonContainer');
 
         let selectedMentalValues = [];
         let selectedHabitValues = [];
@@ -532,15 +1119,25 @@
 
 
         function checkFormProgress() {
-            if (!mentalSection || !habitSection || !impactSection || !durationSection || !ageInput || !durationSelect) {
-                console.error("Salah satu elemen section form tidak ditemukan. Pastikan ID HTML sudah benar.");
-                return;
+            const umurValid = ageInput.value.length > 0 && parseInt(ageInput.value) > 0;
+            
+            if (umurValid) {
+                fisikSection.classList.remove('hidden-section');
+                // Render ulang fisik checkboxes agar terpilih jika sudah ada sebelumnya
+                renderCheckboxes('fisikCheckboxesContainer', allFisikSymptomsWithWeights, 'gejala', 
+                    Array.from(document.querySelectorAll('#fisikCheckboxesContainer input[name="gejala"]:checked')).map(cb => cb.value)
+                );
+            } else {
+                fisikSection.classList.add('hidden-section');
+                document.querySelectorAll('#fisikCheckboxesContainer input[name="gejala"]').forEach(cb => cb.checked = false);
             }
 
-            const selectedFisik = Array.from(fisikCheckboxes).some(cb => cb.checked);
-            const currentMentalChecked = Array.from(document.querySelectorAll('#mentalForm input[name="mental"]:checked')).map(cb => cb.value);
-            const currentHabitChecked = Array.from(document.querySelectorAll('#habitForm input[name="habit"]:checked')).map(cb => cb.value);
-            const currentImpactChecked = Array.from(document.querySelectorAll('#impactForm input[name="impact"]:checked')).map(cb => cb.value);
+            const selectedFisikCheckboxes = Array.from(document.querySelectorAll('#fisikCheckboxesContainer input[name="gejala"]:checked'));
+            const selectedFisikCount = selectedFisikCheckboxes.length;
+
+            const currentMentalChecked = Array.from(document.querySelectorAll('#mentalCheckboxesContainer input[name="mental"]:checked')).map(cb => cb.value);
+            const currentHabitChecked = Array.from(document.querySelectorAll('#habitCheckboxesContainer input[name="habit"]:checked')).map(cb => cb.value);
+            const currentImpactChecked = Array.from(document.querySelectorAll('#impactCheckboxesContainer input[name="impact"]:checked')).map(cb => cb.value);
 
             selectedMentalValues = currentMentalChecked;
             selectedHabitValues = currentHabitChecked;
@@ -550,57 +1147,54 @@
             const hasSelectedHabit = selectedHabitValues.length > 0;
             const hasSelectedImpact = selectedImpactValues.length > 0;
 
-            if (selectedFisik) {
+            if (selectedFisikCount > 0 && umurValid) { 
                 mentalSection.classList.remove('hidden-section');
-                const checkedFisikValues = Array.from(fisikCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
-                let relevantMentalSymptoms = [];
-                const isAnxietyRelated = checkedFisikValues.some(symptom =>
-                    ["Sesak Nafas Terutama Malam", "Pusing atau Kepala Ringan", "Merasa ingin Pingsan", "Dada tertekan seperti Serangan Jantung", "Nafas Pendek/Berat saat Cemas"].includes(symptom)
+                let relevantMentalSymptoms = allMentalSymptoms; // Default to all
+                
+                const isAnxietyRelated = selectedFisikCheckboxes.some(symptom =>
+                    ["Nyeri bagian ulu hati seperti ditekan", "Pusing / kleyengan", "Badan lemas seperti mau pingsan", "Dada tertekan seperti Serangan Jantung", "Nafas Pendek/Berat saat Cemas", "Sering nyeri bagian perut kiri"].includes(symptom.value)
                 );
-                const isGastricRelated = checkedFisikValues.some(symptom =>
-                    ["Perut kembung", "Dada terasa panas (heartburn)", "Asam naik ke tenggorokan", "Mual/muntah", "Sering sendawa", "Tenggorokan Gatal atau Batuk Kering"].includes(symptom)
+                const isGastricRelated = selectedFisikCheckboxes.some(symptom =>
+                    ["Perut begah", "Dada terasa panas (heartburn)", "Asam naik ke tenggorokan", "Mual/muntah", "Sering sendawa", "Tenggorokan Gatal atau Batuk Kering"].includes(symptom.value)
                 );
 
-                if (isAnxietyRelated && isGastricRelated) {
-                    relevantMentalSymptoms = allMentalSymptoms;
-                } else if (isAnxietyRelated) {
+                if (isAnxietyRelated && !isGastricRelated) {
                     relevantMentalSymptoms = allMentalSymptoms.filter(symptom =>
-                        ["Pikiran berlebihan", "Sering gelisah tanpa alasan", "Sulit tidur", "Sering merasa takut atau panik", "Bangun tidur dengan rasa cemas", "Takut makan karena takut kambuh"].includes(symptom.value)
+                        ["Sering pikiran berlebihan / overthinking dimalam hari", "Sering gelisah tanpa alasan", "Sulit tidur", "Sering merasa takut atau panik", "Bangun tidur dengan rasa cemas", "Makan sedikit namun cepat kenyang", "Ketergantungan pada obat-obatan"].includes(symptom.value) 
                     );
-                } else if (isGastricRelated) {
+                } else if (isGastricRelated && !isAnxietyRelated) {
                     relevantMentalSymptoms = allMentalSymptoms.filter(symptom =>
-                        ["Pikiran berlebihan", "Sering gelisah tanpa alasan", "Sulit tidur", "Takut makan karena takut kambuh"].includes(symptom.value)
+                        ["Sering pikiran berlebihan / overthinking dimalam hari", "Sering gelisah tanpa alasan", "Sulit tidur", "Makan sedikit namun cepat kenyang", "Ketergantungan pada obat-obatan"].includes(symptom.value) 
                     );
-                } else {
-                    relevantMentalSymptoms = allMentalSymptoms;
                 }
+                // Jika keduanya atau tidak ada yang spesifik, tampilkan semua mental (sudah diatur sebagai default)
                 renderCheckboxes('mentalCheckboxesContainer', relevantMentalSymptoms, 'mental', selectedMentalValues);
 
             } else {
                 mentalSection.classList.add('hidden-section');
                 selectedMentalValues = [];
-                document.querySelectorAll('#mentalForm input[name="mental"]').forEach(cb => cb.checked = false);
+                document.querySelectorAll('#mentalCheckboxesContainer input[name="mental"]').forEach(cb => cb.checked = false);
             }
 
-            if (selectedFisik && hasSelectedMental) {
+            if (selectedFisikCount > 0 && hasSelectedMental && umurValid) { 
                 habitSection.classList.remove('hidden-section');
                 renderCheckboxes('habitCheckboxesContainer', allHabits, 'habit', selectedHabitValues);
             } else {
                 habitSection.classList.add('hidden-section');
                 selectedHabitValues = [];
-                document.querySelectorAll('#habitForm input[name="habit"]').forEach(cb => cb.checked = false);
+                document.querySelectorAll('#habitCheckboxesContainer input[name="habit"]').forEach(cb => cb.checked = false);
             }
 
-            if (selectedFisik && hasSelectedMental && hasSelectedHabit) {
+            if (selectedFisikCount > 0 && hasSelectedMental && hasSelectedHabit && umurValid) { 
                 impactSection.classList.remove('hidden-section');
                 renderCheckboxes('impactCheckboxesContainer', allImpacts, 'impact', selectedImpactValues);
             } else {
                 impactSection.classList.add('hidden-section');
                 selectedImpactValues = [];
-                document.querySelectorAll('#impactForm input[name="impact"]').forEach(cb => cb.checked = false);
+                document.querySelectorAll('#impactCheckboxesContainer input[name="impact"]').forEach(cb => cb.checked = false);
             }
 
-            if (selectedFisik && hasSelectedMental && hasSelectedHabit && hasSelectedImpact) {
+            if (selectedFisikCount > 0 && hasSelectedMental && hasSelectedHabit && hasSelectedImpact && umurValid) { 
                 durationSection.classList.remove('hidden-section');
             } else {
                 durationSection.classList.add('hidden-section');
@@ -608,23 +1202,24 @@
             }
         }
 
+        // Event listeners
         ageInput.addEventListener('input', checkFormProgress);
-        symptomForm.addEventListener('change', (event) => {
+        document.getElementById('fisikCheckboxesContainer').addEventListener('change', (event) => {
             if (event.target.type === 'checkbox' && event.target.name === 'gejala') {
                 checkFormProgress();
             }
         });
-        mentalForm.addEventListener('change', (event) => {
+        document.getElementById('mentalCheckboxesContainer').addEventListener('change', (event) => {
             if (event.target.type === 'checkbox' && event.target.name === 'mental') {
                 checkFormProgress();
             }
         });
-        habitForm.addEventListener('change', (event) => {
+        document.getElementById('habitCheckboxesContainer').addEventListener('change', (event) => {
             if (event.target.type === 'checkbox' && event.target.name === 'habit') {
                 checkFormProgress();
             }
         });
-        impactForm.addEventListener('change', (event) => {
+        document.getElementById('impactCheckboxesContainer').addEventListener('change', (event) => {
             if (event.target.type === 'checkbox' && event.target.name === 'impact') {
                 checkFormProgress();
             }
@@ -632,297 +1227,473 @@
         durationSelect.addEventListener('change', checkFormProgress);
 
 
-        // JavaScript logika Analisa Keparahan dan Rekomendasi
+        // JavaScript logika Diagnosa Keparahan dan Rekomendasi
         function calculateSeverity() {
-            const fisikCheckboxes = Array.from(document.querySelectorAll('input[name="gejala"]:checked'));
-            const mentalCheckboxes = Array.from(document.querySelectorAll('#mentalForm input[name="mental"]:checked'));
-            const habitCheckboxes = Array.from(document.querySelectorAll('#habitForm input[name="habit"]:checked'));
-            const impactCheckboxes = Array.from(document.querySelectorAll('#impactForm input[name="impact"]:checked'));
+            const fisikCheckboxes = Array.from(document.querySelectorAll('#fisikCheckboxesContainer input[name="gejala"]:checked'));
+            const mentalCheckboxes = Array.from(document.querySelectorAll('#mentalCheckboxesContainer input[name="mental"]:checked'));
+            const habitCheckboxes = Array.from(document.querySelectorAll('#habitCheckboxesContainer input[name="habit"]:checked'));
+            const impactCheckboxes = Array.from(document.querySelectorAll('#impactCheckboxesContainer input[name="impact"]:checked'));
 
             const durasiEl = document.getElementById("duration");
-            const umurEl = document.getElementById("age");
+            const umurEl = document.getElementById("age"); 
 
-            const durasi = durasiEl && durasiEl.value ? durasiEl.value : null;
-            const umur = umurEl && umurEl.value ? umurEl.value : null;
+            const umur = parseInt(umurEl.value);
+            const durasiValue = durasiEl.value;
 
-            const isMentalSectionVisible = !mentalSection.classList.contains('hidden-section');
-            const isHabitSectionVisible = !habitSection.classList.contains('hidden-section');
-            const isImpactSectionVisible = !impactSection.classList.contains('hidden-section');
-            const isDurationSectionVisible = !durationSection.classList.contains('hidden-section');
+            // --- Validasi yang Lebih Jelas dan Komprehensif ---
+            if (isNaN(umur) || umur <= 0) {
+                alert("Mohon masukkan usia Anda dengan benar (angka positif).");
+                ageInput.focus(); // Fokuskan ke input usia
+                return;
+            }
+            if (fisikCheckboxes.length === 0) {
+                alert("Mohon pilih setidaknya satu gejala di bagian '2. Gejala Fisik yang Dialami'.");
+                // Scroll ke bagian fisik jika belum terlihat
+                if (fisikSection.classList.contains('hidden-section')) {
+                     fisikSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
+            }
+            if (mentalCheckboxes.length === 0) { // Validasi ini perlu jika bagian mental sudah terbuka
+                alert("Mohon pilih setidaknya satu gejala di bagian '3. Gejala Psikologi yang Dirasakan'.");
+                if (mentalSection.classList.contains('hidden-section')) {
+                    mentalSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
+            }
+             if (habitCheckboxes.length === 0) { // Validasi ini perlu jika bagian kebiasaan sudah terbuka
+                alert("Mohon pilih setidaknya satu kebiasaan di bagian '4. Kebiasaan Sehari-hari'.");
+                if (habitSection.classList.contains('hidden-section')) {
+                    habitSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
+            }
+            if (impactCheckboxes.length === 0) { // Validasi ini perlu jika bagian dampak sudah terbuka
+                alert("Mohon pilih setidaknya satu dampak di bagian '5. Dampak Kondisi Saat Ini'.");
+                if (impactSection.classList.contains('hidden-section')) {
+                    impactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
+            }
+            if (!durasiValue) {
+                alert("Mohon pilih durasi gejala di bagian '6. Durasi Gejala'.");
+                durationSelect.focus(); // Fokuskan ke dropdown durasi
+                return;
+            }
+            // --- Akhir Validasi ---
 
-            // Validasi agar semua bagian terisi sebelum analisa
-            if (!umur || umur === "" ||
-                fisikCheckboxes.length === 0 ||
-                (isMentalSectionVisible && selectedMentalValues.length === 0) ||
-                (isHabitSectionVisible && selectedHabitValues.length === 0) ||
-                (isImpactSectionVisible && selectedImpactValues.length === 0) ||
-                (isDurationSectionVisible && (!durasi || durasi === ""))) {
-                return { error: "Harap isi semua data dan keluhan Anda terlebih dahulu." };
+
+            let totalScore = 0;
+            let selectedGejalaFisik = [];
+            let selectedGejalaMental = [];
+            let selectedKebiasaan = [];
+            let selectedDampak = [];
+            
+            let productsToRecommend = []; 
+            let lifestyleTips = [];
+            let generalCharacteristics = []; 
+            let finalNoteMessage = "";
+
+
+            // Calculate score for Fisik Symptoms
+            fisikCheckboxes.forEach(checkbox => {
+                const symptom = allFisikSymptomsWithWeights.find(s => s.value === checkbox.value);
+                if (symptom) {
+                    totalScore += symptom.weight;
+                    selectedGejalaFisik.push(symptom.label);
+                }
+            });
+
+            // Calculate score for Mental Symptoms
+            mentalCheckboxes.forEach(checkbox => {
+                const symptom = allMentalSymptoms.find(s => s.value === checkbox.value);
+                if (symptom) {
+                    totalScore += symptom.weight;
+                    selectedGejalaMental.push(symptom.label);
+                }
+            });
+
+            // Calculate score for Habits
+            habitCheckboxes.forEach(checkbox => {
+                const habit = allHabits.find(h => h.value === checkbox.value);
+                if (habit) {
+                    totalScore += habit.weight;
+                    selectedKebiasaan.push(habit.label);
+                }
+            });
+
+            // Calculate score for Impacts
+            impactCheckboxes.forEach(checkbox => {
+                const impact = allImpacts.find(i => i.value === checkbox.value);
+                if (impact) {
+                    totalScore += impact.weight;
+                    selectedDampak.push(impact.label);
+                }
+            });
+
+            // Add duration score
+            if (durationWeights[durasiValue]) {
+                totalScore += durationWeights[durasiValue];
             }
 
-            // Kumpulkan detail gejala yang dipilih untuk ditampilkan dan dikirim
-            selectedSymptomsDetails.fisik = fisikCheckboxes.map(cb => cb.value).join(", ");
-            selectedSymptomsDetails.mental = mentalCheckboxes.map(cb => cb.value).join(", ");
-            selectedSymptomsDetails.habit = habitCheckboxes.map(cb => cb.value).join(", ");
-            selectedSymptomsDetails.impact = impactCheckboxes.map(cb => cb.value).join(", ");
+            let severityText = "";
+            let summaryText = "";
+            let severityClass = ""; 
 
-            const fisikSkor = fisikCheckboxes.length;
-            const mentalSkor = mentalCheckboxes.length;
-            const habitSkor = habitCheckboxes.length;
-            const impactSkor = impactCheckboxes.length;
+            // --- Logika Diagnosa Berdasarkan Skor Total & Relevansi Ciri-ciri ---
+            if (totalScore <= 10) {
+                severityText = "Ringan";
+                severityClass = "ringan";
+                summaryText = "Gejala yang kamu alami masih termasuk ringan dan bisa dikendalikan dengan pola hidup sehat dan perubahan kecil.";
+                
+                generalCharacteristics = [
+                    "Durasi gejala kurang dari 1 tahun",
+                    "Gejala fisik seperti perut kembung, sendawa, atau heartburn hanya sesekali",
+                    "Gejala psikologis ringan: cemas ringan, bisa tidur, gak mengganggu aktivitas harian"
+                ];
 
-            let durasiSkor = 0;
-            if (durasi === "<<1 minggu") durasiSkor = 1;
-            else if (durasi === "1-3 minggu" || durasi === "1-3 bulan") durasiSkor = 2;
-            else if (
-                durasi === ">> 3 bulan" ||
-                durasi === "1 tahun" ||
-                durasi === "2 tahun" ||
-                durasi === "3 tahun" ||
-                durasi === "Lebih dari 3 tahun"
-            ) {
-                durasiSkor = 3;
+                lifestyleTips = [
+                    "Perbaiki pola makan: makan lebih teratur, hindari makanan pedas dan asam",
+                    "Mulai olahraga ringan (jalan pagi, stretching)",
+                    "Tidur cukup dan kurangi rebahan setelah makan"
+                ];
+                
+                productsToRecommend = [
+                    { id: "Chitin Chitosan Capsules", name: "Tiens Chitin Chitosan", dosage: "2 kapsul, 2x sehari sebelum makan" },
+                    { id: "Zinc Capsules", name: "Tiens Zinc", dosage: "2 kapsul, 1x sehari sesudah makan" }
+                ];
+                
+                finalNoteMessage = "Lanjutkan gaya hidup sehat dan pantau gejala.";
+
+            } else if (totalScore <= 25) {
+                severityText = "Sedang";
+                severityClass = "sedang";
+                summaryText = "Gejala GERD anxiety kamu sudah mulai mengganggu aktivitas dan butuh penanganan lebih serius.";
+                
+                generalCharacteristics = [
+                    "Durasi gejala 1–2 tahun",
+                    "Heartburn, mual, asam naik mulai sering",
+                    "Gangguan tidur, cemas berlebihan, mulai takut makan",
+                    "Pola makan dan gaya hidup tidak teratur"
+                ];
+
+                lifestyleTips = [
+                    "Terapkan diet lambung friendly (hindari kopi, soda, santan, gorengan)",
+                    "Latih pernapasan untuk redakan anxiety",
+                    "Hindari makan terlalu malam",
+                    "Perbaiki jam tidur dan mulai relaksasi harian"
+                ];
+                
+                productsToRecommend = [
+                    { id: "Chitin Chitosan Capsules", name: "Tiens Chitin Chitosan", dosage: "2 kapsul, 2x sehari sebelum makan" }, 
+                    { id: "Zinc Capsules", name: "Tiens Zinc", dosage: "2 kapsul, 2x sehari setelah makan" },
+                    { id: "Nutrient Super Calcium Powder", name: "Tiens Nutrient Super Calcium Powder", dosage: "1 sachet, 1x sehari malam sebelum tidur" }
+                ];
+
+                finalNoteMessage = "Gejala seperti ini gak bisa dianggap enteng. Butuh terapi & suplemen rutin.";
+
+            } else { // totalScore > 25 (digabung Parah dan Sangat Parah)
+                severityText = "Parah";
+                severityClass = "parah";
+                summaryText = "Gejala GERD anxiety kamu tergolong berat dan bisa berisiko ke gangguan fungsional/psikologis yang lebih serius.";
+                
+                generalCharacteristics = [
+                    "Sudah berlangsung lebih dari 2 tahun",
+                    "Nyeri dada seperti serangan jantung",
+                    "Sering pusing, mual berat, sesak napas parah terutama malam",
+                    "Ketergantungan obat lambung, gangguan makan, berat badan turun",
+                    "Anxiety berat: takut kambuh, panik tanpa sebab, isolasi sosial"
+                ];
+
+                lifestyleTips = [
+                    "Terapi kombinasi: relaksasi, pola makan khusus, penanganan stress",
+                    "Hindari semua pemicu: kopi, rokok, begadang, junk food",
+                    "Konsultasi intensif (bisa dengan psikolog atau coach anxiety lambung)"
+                ];
+                
+                productsToRecommend = [
+                    { id: "Chitin Chitosan Capsules", name: "Tiens Chitin Chitosan", dosage: "2 kapsul, 2x sehari sebelum makan" },
+                    { id: "Zinc Capsules", name: "Tiens Zinc", dosage: "2 kapsul, 2x sehari setelah makan" },
+                    { id: "Nutrient Super Calcium Powder", name: "Tiens Nutrient Super Calcium Powder", dosage: "1 sachet, 1x sehari malam hari sebelum tidur" }
+                ];
+                
+                finalNoteMessage = "Kombinasi ini bantu netralkan asam, sembuhkan luka lambung, dan stabilkan sistem saraf. Jangan tunggu makin parah. Segera atasi.";
             }
 
-            const totalSkor = fisikSkor + mentalSkor + habitSkor + impactSkor + durasiSkor;
+            // Update global variable for WhatsApp message
+            selectedSymptomsDetails.fisik = selectedGejalaFisik.length > 0 ? selectedGejalaFisik.join(", ") : "-";
+            selectedSymptomsDetails.mental = selectedGejalaMental.length > 0 ? selectedGejalaMental.join(", ") : "-";
+            selectedSymptomsDetails.habit = selectedKebiasaan.length > 0 ? selectedKebiasaan.join(", ") : "-";
+            selectedSymptomsDetails.impact = selectedDampak.length > 0 ? selectedDampak.join(", ") : "-";
 
-            let diagnosis = "", deskripsi = "", tingkat = "", rekomendasiProductIds = [];
+            currentRecommendationProducts = productsToRecommend;
+            currentLifestyleTips = lifestyleTips;
+            currentDiagnosisResultText = summaryText; 
+            currentGeneralCharacteristics = generalCharacteristics; 
+            currentFinalNote = finalNoteMessage; // Simpan final note
 
-            if (totalSkor <= 7) {
-                tingkat = "Ringan";
-                diagnosis = "Tingkat Ringan";
-                deskripsi = `
-                    <p><strong>Kesimpulan:</strong><br>Gejala yang anda alami masih termasuk ringan dan bisa dikendalikan dengan pola hidup sehat dan perubahan kecil.</p>
-                    <h4>Ciri-ciri umum:</h4>
-                    <ul>
-                        <li>Durasi gejala kurang dari 1 tahun</li>
-                        <li>Gejala fisik seperti perut kembung, sendawa, atau heartburn hanya sesekali</li>
-                        <li>Gejala psikologis ringan: cemas ringan, bisa tidur, gak mengganggu aktivitas harian</li>
-                    </ul>
-                    <h4>Saran Pola Hidup:</h4>
-                    <ul>
-                        <li>Perbaiki pola makan: makan lebih teratur, hindari makanan pedas dan asam</li>
-                        <li>Mulai olahraga ringan (jalan pagi, stretching)</li>
-                        <li>Tidur cukup dan kurangi rebahan setelah makan</li>
-                    </ul>
-                    <h4>Saran Produk Tiens:</h4>
-                    <ul>
-                        <li>Tiens Chitin Chitosan (2x sehari sebelum makan) → bantu mengikat asam lambung & memperbaiki pencernaan ringan</li>
-                        <li>Tiens Zinc (1x sehari sesudah makan) → bantu perbaikan jaringan lambung</li>
-                    </ul>
-                    <p class="final-note">✅ Lanjutkan gaya hidup sehat dan pantau gejala.</p>
-                `;
-                rekomendasiProductIds = ["Chitin Chitosan Capsules", "Zinc Capsules"];
-            } else if (totalSkor <= 15) {
-                tingkat = "Sedang";
-                diagnosis = "Tingkat Sedang";
-                deskripsi = `
-                    <p><strong>Kesimpulan:</strong><br>Gejala GERD anxiety anda sudah mulai mengganggu aktivitas dan butuh penanganan lebih serius.</p>
-                    <h4>Ciri-ciri umum:</h4>
-                    <ul>
-                        <li>Durasi gejala 1–2 tahun</li>
-                        <li>Heartburn, mual, asam naik mulai sering</li>
-                        <li>Gangguan tidur, cemas berlebihan, mulai takut makan</li>
-                        <li>Pola makan dan gaya hidup tidak teratur</li>
-                    </ul>
-                    <h4>Saran Pola Hidup:</h4>
-                    <ul>
-                        <li>Terapkan diet lambung friendly (hindari kopi, soda, santan, gorengan)</li>
-                        <li>Latih pernapasan untuk redakan anxiety</li>
-                        <li>Hindari makan terlalu malam</li>
-                        <li>Perbaiki jam tidur dan mulai relaksasi harian</li>
-                    </ul>
-                    <h4>Saran Produk Tiens:</h4>
-                    <ul>
-                        <li>Tiens Chitin Chitosan → bantu netralkan asam lambung, detox lambung</li>
-                        <li>Tiens Zinc → regenerasi lapisan lambung yang terirritasi</li>
-                        <li>Tiens Calcium → bantu stabilkan asam lambung dan memperkuat saraf, terutama saat cemas</li>
-                    </ul>
-                    <p class="final-note">🔔 Gejala seperti ini gak bisa dianggap enteng. Butuh terapi & suplemen rutin.</p>
-                `;
-                rekomendasiProductIds = ["Chitin Chitosan Capsules", "Zinc Capsules", "Nutrient Super Calcium Powder"];
-            } else {
-                tingkat = "Berat";
-                diagnosis = "Tingkat Parah";
-                deskripsi = `
-                    <p><strong>Kesimpulan:</strong><br>Gejala GERD anxiety anda tergolong berat dan bisa berisiko ke gangguan fungsional/psikologis yang lebih serius.</p>
-                    <h4>Ciri-ciri umum:</h4>
-                    <ul>
-                        <li>Sudah berlangsung lebih dari 2 tahun</li>
-                        <li>Nyeri dada seperti serangan jantung</li>
-                        <li>Sering pusing, mual berat, sesak napas parah terutama malam</li>
-                        <li>Ketergantungan obat lambung, gangguan makan, berat badan turun</li>
-                        <li>Anxiety berat: takut kambuh, panik tanpa sebab, isolasi sosial</li>
-                    </ul>
-                    <h4>Saran Pola Hidup:</h4>
-                    <ul>
-                        <li>Terapi kombinasi: relaksasi, pola makan khusus, penanganan stress</li>
-                        <li>Hindari semua pemicu: kopi, rokok, begadang, junk food</li>
-                        <li>Konsultasi intensif (bisa dengan psikolog atau coach anxiety lambung)</li>
-                    </ul>
-                    <h4>Saran Produk Tiens (WAJIB):</h4>
-                    <ul>
-                        <li>Tiens Chitin Chitosan (2x sehari sebelum makan)</li>
-                        <li>Tiens Zinc (2x sehari setelah makan)</li>
-                        <li>Tiens Calcium (1x sehari malam hari sebelum tidur)</li>
-                    </ul>
-                    <p class="final-note">💥 Kombinasi ini bantu netralkan asam, sembuhkan luka lambung, dan stabilkan sistem saraf.</p>
-                    <p class="whatsapp-call-to-action warning">🛑 Jangan tunggu makin parah. Segera atasi.</p>
-                `;
-                rekomendasiProductIds = ["Chitin Chitosan Capsules", "Zinc Capsules", "Nutrient Super Calcium Powder"];
+            // Render Product Recommendations
+            let productRecommendationsHTML = ``;
+            if (productsToRecommend.length > 0) {
+                productRecommendationsHTML = `<div class="recommendation-section">
+                    <h3>Saran Produk Tiens (Rekomendasi Penanganan)</h3>
+                    <div class="product-recommendations-container">`;
+                productsToRecommend.forEach(rec => {
+                    const product = tiensProducts.find(p => p.id === rec.id);
+                    // Pastikan product ditemukan sebelum mencoba mengakses product.image
+                    const imageUrl = product ? product.image : ''; 
+                    const productName = product ? product.name : rec.name; // Fallback to rec.name if product not found
+
+                    productRecommendationsHTML += `
+                            <div class="recommended-product-card">
+                                <img src="${imageUrl}" alt="${productName}" />
+                                <div class="product-details">
+                                    <h4>${rec.name}</h4>
+                                    <p>${rec.dosage ? `*Aturan Pakai:* ${rec.dosage}` : 'Aturan pakai disesuaikan'}</p> 
+                                </div>
+                            </div>
+                        `;
+                });
+                productRecommendationsHTML += `</div>`;
             }
 
-            return {
-                umur,
-                durasi,
-                fisik: fisikSkor,
-                mental: mentalSkor,
-                habit: habitSkor,
-                impact: impactSkor,
-                tingkat,
-                diagnosis,
-                deskripsi,
-                rekomendasiProductIds
-            };
-        }
+            // Render Lifestyle Tips
+            let lifestyleTipsHTML = ``;
+            if (lifestyleTips.length > 0) {
+                lifestyleTipsHTML = `<div class="lifestyle-tips-section">
+                    <h3>Saran Pola Hidup & Pola Makan</h3>
+                    <ul>`;
+                lifestyleTips.forEach(tip => {
+                    lifestyleTipsHTML += `<li>${tip}</li>`;
+                });
+                lifestyleTipsHTML += `</ul></div>`;
+            }
 
-        document.getElementById("cekButton").addEventListener("click", function () {
-            const hasil = calculateSeverity();
-            const hasilBox = document.getElementById("hasilPenilaian");
-            const konsultasiButtonContainer = document.getElementById('konsultasiButtonContainer'); // Ambil referensi container tombol
+            // Render General Characteristics
+            let generalCharacteristicsHTML = ``;
+            if (currentGeneralCharacteristics.length > 0) {
+                generalCharacteristicsHTML = `<div class="general-characteristics">
+                    <h4>Ciri-ciri umum dari kondisi ini:</h4>
+                    <ul>`;
+                currentGeneralCharacteristics.forEach(char => {
+                    generalCharacteristicsHTML += `<li>${char}</li>`;
+                });
+                generalCharacteristicsHTML += `</ul></div>`;
+            }
 
-            if (hasil.error) {
-                hasilBox.innerHTML = `<h2 style="color: red;">${hasil.error}</h2>`;
-                hasilBox.style.display = "block";
-                konsultasiButtonContainer.style.display = "none"; // Sembunyikan tombol jika ada error
-                displayTiensProducts(); // Tetap tampilkan produk default jika ada error
+            // Render Final Note (pesan di bawah rekomendasi)
+            let finalNoteHTML = ``;
+            if (currentFinalNote) {
+                // Determine class based on severity for final note style
+                let finalNoteClass = "final-note";
+                if (severityClass === "parah") {
+                    finalNoteClass += " warning"; // If "parah", use warning style
+                }
+                finalNoteHTML = `<div class="${finalNoteClass}">${currentFinalNote}</div>`;
+            }
+
+            // Display results
+            const hasilDiv = document.getElementById("hasilPenilaian");
+            if (!hasilDiv) {
+                console.error("Elemen 'hasilPenilaian' tidak ditemukan!");
                 return;
             }
 
-            let output = `<h2>📋 Hasil Analisa </h2>`;
-
-            if (hasil.umur) {
-                output += `<p><strong>Usia:</strong> ${hasil.umur} tahun</p>`;
-            }
-
-            if (hasil.durasi) {
-                output += `<p><strong>Durasi Gejala:</strong> ${hasil.durasi}</p>`;
-            }
-
-            if (selectedSymptomsDetails.fisik) {
-                output += `<p><strong>Gejala Fisik:</strong> ${selectedSymptomsDetails.fisik}</p>`;
-            } else {
-                output += `<p><strong>Gejala Fisik:</strong> Tidak ada yang dipilih</p>`;
-            }
-
-            if (selectedSymptomsDetails.mental) {
-                output += `<p><strong>Psikologis:</strong> ${selectedSymptomsDetails.mental}</p>`;
-            } else {
-                output += `<p><strong>Psikologis:</strong> Tidak ada yang dipilih</p>`;
-            }
-
-            if (selectedSymptomsDetails.habit) {
-                output += `<p><strong>Kebiasaan Buruk:</strong> ${selectedSymptomsDetails.habit}</p>`;
-            } else {
-                output += `<p><strong>Kebiasaan Buruk:</strong> Tidak ada yang dipilih</p>`;
-            }
-
-            if (selectedSymptomsDetails.impact) {
-                output += `<p><strong>Dampak Kehidupan:</strong> ${selectedSymptomsDetails.impact}</p>`;
-            } else {
-                output += `<p><strong>Dampak Kehidupan:</strong> Tidak ada yang dipilih</p>`;
-            }
-
-            output += `
-                <hr>
-                <p><strong>Tingkat Keparahan:</strong> <span id="tingkatKeparahanText">${hasil.tingkat}</span></p>
-                <h3>🩺 Diagnosis: ${hasil.diagnosis}</h3>
-                ${hasil.deskripsi}
+            hasilDiv.innerHTML = `
+                <div class="analysis-results-card">
+                    <h2>Hasil Diagnosa Kesehatan Lambung</h2>
+                    <p>Tingkat Keparahan: <span id="tingkatKeparahanText" class="${severityClass}">${severityText}</span></p>
+                    <p class="summary-text">${summaryText}</p>
+                    ${generalCharacteristicsHTML} 
+                    ${productRecommendationsHTML}
+                    ${finalNoteHTML} ${lifestyleTipsHTML}
+                    <div class="whatsapp-call-to-action">
+                        Untuk konsultasi lebih lanjut dan informasi produk yang direkomendasikan, klik tombol di bawah ini:
+                    </div>
+                </div>
             `;
+            hasilDiv.style.display = 'block'; 
+            konsultasiButtonContainer.style.display = 'block'; 
 
-            hasilBox.innerHTML = output;
-            hasilBox.style.display = "block";
+            // Update product catalog based on recommendation (using just IDs for carousel highlighting)
+            displayTiensProducts(productsToRecommend.map(p => p.id));
+        }
 
-            // Tampilkan tombol konsultasi setelah hasil muncul
-            konsultasiButtonContainer.style.display = "block";
+        // Fungsi untuk membuat pesan WhatsApp
+        function generateWhatsAppMessage() {
+            const umur = document.getElementById("age").value;
+            const durasiValue = document.getElementById("duration").value;
+            const severityText = document.getElementById("tingkatKeparahanText").innerText;
+            
+            let message = `Halo, saya ingin berkonsultasi mengenai kesehatan lambung saya.\n\n`;
+            message += `*Data Pengecekan:*\n`;
+            message += `Usia: ${umur} tahun\n`;
+            message += `Durasi Gejala: ${durasiValue}\n`;
+            message += `Tingkat Keparahan: *${severityText}*\n\n`; 
 
-
-            const tingkatKeparahanTextElement = document.getElementById("tingkatKeparahanText");
-            if (tingkatKeparahanTextElement) {
-                let warna = "";
-                if (hasil.tingkat === "Berat") {
-                    warna = "red";
-                } else if (hasil.tingkat === "Sedang") {
-                    warna = "#FFA500"; // Orange
-                } else if (hasil.tingkat === "Ringan") {
-                    warna = "green";
-                }
-                tingkatKeparahanTextElement.style.color = warna;
-                tingkatKeparahanTextElement.style.fontWeight = "bold";
+            if (selectedSymptomsDetails.fisik && selectedSymptomsDetails.fisik !== "-") {
+                message += `Gejala Fisik yang Dialami: ${selectedSymptomsDetails.fisik}\n`;
+            }
+            if (selectedSymptomsDetails.mental && selectedSymptomsDetails.mental !== "-") {
+                message += `Gejala Psikologi yang Dirasakan: ${selectedSymptomsDetails.mental}\n`;
+            }
+            if (selectedSymptomsDetails.habit && selectedSymptomsDetails.habit !== "-") {
+                message += `Kebiasaan Sehari-hari: ${selectedSymptomsDetails.habit}\n`;
+            }
+            if (selectedSymptomsDetails.impact && selectedSymptomsDetails.impact !== "-") {
+                message += `Dampak yang Dialami: ${selectedSymptomsDetails.impact}\n`;
             }
 
-            let fullWhatsappText = `Hasil Diagnosa Kesehatan Lambung Anda:\n\n`;
-            fullWhatsappText += `Usia: ${hasil.umur} tahun\n`;
-            fullWhatsappText += `Durasi Gejala: ${hasil.durasi}\n`;
-            fullWhatsappText += `Gejala Fisik: ${selectedSymptomsDetails.fisik || 'Tidak ada'}\n`;
-            fullWhatsappText += `Psikologis: ${selectedSymptomsDetails.mental || 'Tidak ada'}\n`;
-            fullWhatsappText += `Kebiasaan Buruk: ${selectedSymptomsDetails.habit || 'Tidak ada'}\n`;
-            fullWhatsappText += `Dampak Kehidupan: ${selectedSymptomsDetails.impact || 'Tidak ada'}\n\n`;
-            fullWhatsappText += `Tingkat Keparahan: ${hasil.tingkat}\n`;
-            fullWhatsappText += `Diagnosis: ${hasil.diagnosis}\n\n`;
+            message += `\n*Hasil Diagnosa:*\n${currentDiagnosisResultText}\n\n`;
+            
+            if (currentGeneralCharacteristics.length > 0) {
+                message += `*Ciri-ciri umum dari kondisi ini:*\n`;
+                currentGeneralCharacteristics.forEach(char => {
+                    message += `• ${char}\n`;
+                });
+                message += `\n`;
+            }
 
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = hasil.deskripsi;
-            let rawDescriptionText = tempDiv.innerText.replace(/[\u00A0\u200B-\u200D\uFEFF]/g, ' ').trim();
-            rawDescriptionText = rawDescriptionText.replace(/(\r\n|\n|\r){2,}/g, '\n\n');
-            rawDescriptionText = rawDescriptionText.replace(/(\s){2,}/g, ' ');
-            rawDescriptionText = rawDescriptionText.replace(/^-/gm, '•');
-            rawDescriptionText = rawDescriptionText.replace(/✅/g, '✅ ');
-            rawDescriptionText = rawDescriptionText.replace(/🔔/g, '🔔 ');
-            rawDescriptionText = rawDescriptionText.replace(/💥/g, '💥 ');
-            rawDescriptionText = rawDescriptionText.replace(/🛑/g, '🛑 ');
+            if (currentRecommendationProducts.length > 0) {
+                message += `*Saran Produk Tiens:*\n`;
+                currentRecommendationProducts.forEach(rec => {
+                    // Hanya tambahkan aturan pakai ke pesan WA
+                    message += `• ${rec.name} ${rec.dosage ? `(${rec.dosage})` : ''}\n`;
+                });
+                message += `\n`;
+            }
 
-            fullWhatsappText += rawDescriptionText;
+            // Tambahkan final note ke WhatsApp message
+            if (currentFinalNote) {
+                // Untuk WA, jika ada kalimat "Jangan tunggu makin parah. Segera atasi", tambahkan baris baru untuk memisahkan.
+                if (currentFinalNote.includes("Jangan tunggu makin parah. Segera atasi")) {
+                    message += `*${currentFinalNote.replace(/\. Segera atasi$/, '.\nSegera atasi')}*\n\n`;
+                } else {
+                    message += `*${currentFinalNote}*\n\n`;
+                }
+            }
 
-            currentAnalysisResultText = fullWhatsappText.trim();
 
-            displayTiensProducts(hasil.rekomendasiProductIds); // Memastikan fitur ini tetap terpanggil
+            if (currentLifestyleTips.length > 0) {
+                message += `*Saran Pola Hidup:*\n`; // Mengubah dari "Saran Pola Hidup & Pola Makan"
+                currentLifestyleTips.forEach(tip => {
+                    // Membersihkan tag HTML dari tips gaya hidup jika ada
+                    const cleanedTip = tip.replace(/<\/?(strong|em|b|i)[^>]*>/g, '').replace(/<[^>]*>?/gm, '');
+                    message += `• ${cleanedTip}\n`;
+                });
+                message += `\n`;
+            }
+            
+            // Tambahkan CTA WhatsApp terakhir (085721368380)
+            if (severityText === "Ringan") {
+                message += `✅ Lanjutkan gaya hidup sehat dan pantau gejala.\n` 
+                message += `📞 Konsultasi gratis via WA: 085721368380\n`;
+            } else if (severityText === "Sedang") {
+                message += `🔔 Gejala seperti ini gak bisa dianggap enteng. Butuh terapi & suplemen rutin.\n`
+                message += `📞 Konsultasi pribadi via WA: 085721368380\n`;
+            } else if (severityText === "Parah") {
+                message += `🛑 Jangan tunggu makin parah. Segera atasi\n` 
+                message += `📞 Konsultasi pribadi via WA: 085721368380\n`;
+            }
+            
+            return encodeURIComponent(message);
+        }
+
+        // Event listener untuk tombol "Konsultasi via WhatsApp"
+        document.getElementById('konsultasiWaButton').addEventListener('click', () => {
+            const whatsappNumber = '6285721368380'; // Ganti dengan nomor WhatsApp Anda
+            const message = generateWhatsAppMessage();
+            window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (mentalSection && habitSection && impactSection && durationSection) {
-                mentalSection.classList.add('hidden-section');
-                habitSection.classList.add('hidden-section');
-                impactSection.classList.add('hidden-section');
-                durationSection.classList.add('hidden-section');
-            } else {
-                console.error("Inisialisasi: Salah satu elemen section form tidak ditemukan.");
-            }
-            displayTiensProducts(); // Tampilkan produk default saat halaman pertama kali dimuat
-            checkFormProgress();
+        // --- MODAL (POP-UP) LOGIC ---
+        const productDetailModal = document.getElementById('productDetailModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const modalProductName = document.getElementById('modalProductName');
+        const modalProductImage = document.getElementById('modalProductImage');
+        const modalProductDescription = document.getElementById('modalProductDescription');
+        const modalProductBenefits = document.getElementById('modalProductBenefits');
 
-            // Sembunyikan tombol konsultasi saat halaman dimuat
-            const konsultasiButtonContainer = document.getElementById('konsultasiButtonContainer');
-            if (konsultasiButtonContainer) {
-                konsultasiButtonContainer.style.display = "none";
+        function showProductModal(productId) {
+            const product = tiensProducts.find(p => p.id === productId);
+            if (!product) {
+                console.error(`Product with ID ${productId} not found.`);
+                return;
             }
 
-            const konsultasiWaButton = document.getElementById('konsultasiWaButton');
-            if (konsultasiWaButton) {
-                konsultasiWaButton.addEventListener('click', () => {
-                    const whatsappPhoneNumber = '6285721368380';
-                    let messageToSend = "Halo, saya ingin konsultasi mengenai kondisi lambung saya.";
+            modalProductName.textContent = product.name;
+            modalProductImage.src = product.image;
+            modalProductImage.alt = product.name;
+            modalProductDescription.textContent = product.fullDescription; // Gunakan fullDescription
 
-                    if (currentAnalysisResultText) {
-                        messageToSend = currentAnalysisResultText;
-                        messageToSend += `\n\nSaya ingin konsultasi lebih lanjut mengenai kondisi ini.`;
-                    } else {
-                        messageToSend += "\n\nSaya belum melakukan analisis. Bisakah Anda bantu saya memahami kondisi lambung saya?";
-                    }
-
-                    const whatsappLink = `https://wa.me/${whatsappPhoneNumber}?text=${encodeURIComponent(messageToSend)}`;
-                    window.open(whatsappLink, '_blank');
+            modalProductBenefits.innerHTML = ''; // Clear previous benefits
+            if (product.benefits && product.benefits.length > 0) {
+                product.benefits.forEach(benefit => {
+                    const li = document.createElement('li');
+                    li.textContent = benefit;
+                    modalProductBenefits.appendChild(li);
                 });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = "Tidak ada manfaat spesifik yang tercatat.";
+                modalProductBenefits.appendChild(li);
+            }
+
+            productDetailModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when modal is active
+        }
+
+        function closeProductModal() {
+            productDetailModal.classList.remove('active');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        closeModalButton.addEventListener('click', closeProductModal);
+        // Close modal if clicking outside the content
+        productDetailModal.addEventListener('click', (event) => {
+            if (event.target === productDetailModal) {
+                closeProductModal();
+            }
+        });
+        // --- END MODAL LOGIC ---
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Panggil displayTiensProducts di awal untuk mengisi katalog
+            displayTiensProducts();
+
+            // Event listener untuk tombol "Cek Hasil"
+            const cekButton = document.getElementById('cekButton');
+            if (cekButton) {
+                cekButton.addEventListener('click', () => {
+                    calculateSeverity();
+                    // Scroll ke bagian hasil setelah perhitungan
+                    document.getElementById('hasilPenilaian').scrollIntoView({ behavior: 'smooth' });
+                });
+            } else {
+                console.error("Tombol 'cekButton' tidak ditemukan!");
+            }
+            
+            // Panggil renderCheckboxes untuk gejala fisik sebelum checkFormProgress
+            renderCheckboxes('fisikCheckboxesContainer', allFisikSymptomsWithWeights, 'gejala'); 
+            checkFormProgress(); // Panggil ini untuk menangani visibility awal
+
+            // Tambahkan kelas 'checkbox-grid' ke elemen container
+            const fisikContainer = document.getElementById('fisikCheckboxesContainer');
+            if (fisikContainer) {
+                fisikContainer.classList.add('checkbox-grid');
+            }
+            const mentalContainer = document.getElementById('mentalCheckboxesContainer');
+            if (mentalContainer) {
+                mentalContainer.classList.add('checkbox-grid');
+            }
+            const habitContainer = document.getElementById('habitCheckboxesContainer');
+            if (habitContainer) {
+                habitContainer.classList.add('checkbox-grid');
+            }
+            const impactContainer = document.getElementById('impactCheckboxesContainer');
+            if (impactContainer) {
+                impactContainer.classList.add('checkbox-grid');
             }
         });
     </script>
